@@ -1,357 +1,406 @@
-// "use client";
-// import { useEffect, useState } from "react";
-
-// const translations = {
-//   en: {
-//     title: "Project Sarathi",
-//     guide: "Guide Me",
-//     waiting: "Waiting for alerts..."
-//   },
-//   hi: {
-//     title: "परियोजना सारथी",
-//     guide: "मदद करें",
-//     waiting: "अलर्ट की प्रतीक्षा..."
-//   },
-//   mr: {
-//     title: "प्रोजेक्ट सारथी",
-//     guide: "मदत करा",
-//     waiting: "सूचना येण्याची प्रतीक्षा..."
-//   },
-// };
 
 
-// const disasterColors = {
-//   fire: "bg-red-600",
-//   flood: "bg-blue-600",
-//   earthquake: "bg-orange-500",
-//   gas: "bg-green-500",
-//   chemical: "bg-purple-600",
-//   cyclone: "bg-indigo-600",
-//   tsunami: "bg-cyan-600",
-//   heatwave: "bg-yellow-500",
-//   coldwave: "bg-blue-300",
-//   landslide: "bg-amber-700",
-//   default: "bg-gray-600",
-// };
-
-// export default function Home() {
-//   const [alert, setAlert] = useState(null);
-//   const [lang, setLang] = useState("en");
-//   const [showGuidePage, setShowGuidePage] = useState(false);
-//   const [showGuide, setShowGuide] = useState(false);
-
-//   useEffect(() => {
-//     const savedLang = localStorage.getItem("lang");
-//     if (savedLang) setLang(savedLang);
-
-//     const data = localStorage.getItem("alert");
-//     if (data) setAlert(JSON.parse(data));
-//   }, []);
-
-//   const t = translations[lang] || translations.en;
-//   const type = alert?.type?.trim().toLowerCase()||
-//   "default";
-//   const color = disasterColors[type] || disasterColors.default;
- 
-//   const speakGuide = (type) => {
-//   let message = "";
-
-//   if (lang === "hi") {
-//     if (type === "gas") message = "नाक ढकें और तुरंत दूर जाएं";
-//     else if (type === "fire") message = "तुरंत बाहर निकलें";
-//     else if (type === "earthquake") message = "टेबल के नीचे छिपें";
-//     else if (type === "flood") message = "ऊंचे स्थान पर जाएं";
-//     else if (type === "cyclone") message = "घर के अंदर रहें";
-//     else if (type === "tsunami") message = "समुद्र से दूर जाएं";
-//     else if (type === "heatwave") message = "पानी पीते रहें";
-//     else if (type === "coldwave") message = "गर्म कपड़े पहनें";
-//     else if (type === "landslide") message = "सुरक्षित स्थान पर जाएं";
-//     else message = "सुरक्षित स्थान पर जाएं";
-//   } 
-//   else if (lang === "mr") {
-//     if (type === "gas") message = "नाक झाका आणि दूर जा";
-//     else if (type === "fire") message = "लगेच बाहेर पडा";
-//     else if (type === "earthquake") message = "टेबलखाली लपून बसा";
-//     else if (type === "flood") message = "उंच ठिकाणी जा";
-//     else if (type === "cyclone") message = "घरात राहा";
-//     else if (type === "tsunami") message = "समुद्रापासून दूर जा";
-//     else if (type === "heatwave") message = "पाणी प्या";
-//     else if (type === "coldwave") message = "उबदार कपडे घाला";
-//     else if (type === "landslide") message = "सुरक्षित ठिकाणी जा";
-//     else message = "सुरक्षित ठिकाणी जा";
-//   } 
-//   else {
-//     if (type === "gas") message = "Cover your nose and move away";
-//     else if (type === "fire") message = "Exit immediately";
-//     else if (type === "earthquake") message = "Take cover under a table";
-//     else if (type === "flood") message = "Move to higher ground";
-//     else if (type === "cyclone") message = "Stay indoors";
-//     else if (type === "tsunami") message = "Move away from sea";
-//     else if (type === "heatwave") message = "Stay hydrated";
-//     else if (type === "coldwave") message = "Wear warm clothes";
-//     else if (type === "landslide") message = "Move to safe area";
-//     else message = "Move to a safe place";
-//   }
-
-//   const speech = new SpeechSynthesisUtterance(message);
-//   speech.lang = lang === "hi" ? "hi-IN" : lang === "mr" ? "mr-IN" : "en-US";
-
-//   window.speechSynthesis.cancel();
-//   setTimeout(() => {
-//     window.speechSynthesis.speak(speech);
-//   }, 200);
-// };
-// const translateMessage = (message, type) => {
-//   type = type.toLowerCase();
-
-//   if (lang === "hi") {
-//   if (type === "gas") return `⚠️ ज़हरीली गैस का रिसाव, तुरंत दूर जाएं`;
-//   if (type === "fire") return `🔥 आग लग गई है, तुरंत बाहर निकलें`;
-//   if (type === "earthquake") return `🌍 भूकंप आया है, सुरक्षित स्थान पर जाएं`;
-//   if (type === "flood") return `🌊 बाढ़ आ रही है, ऊंचे स्थान पर जाएं`;
-//   if (type === "cyclone") return `🌀 चक्रवात आ रहा है, घर के अंदर रहें`;
-//   if (type === "tsunami") return `🌊🌪️ सुनामी का खतरा, ऊंचे स्थान पर जाएं`;
-//   if (type === "heatwave") return `🔥☀️ हीटवेव, पानी पीते रहें`;
-//   if (type === "coldwave") return `❄️ कोल्डवेव, गर्म कपड़े पहनें`;
-//   if (type === "landslide") return `🏔️⚠️ भूस्खलन का खतरा, सुरक्षित स्थान पर जाएं`;
-// } 
-// else if (lang === "mr") {
-//   if (type === "gas") return `⚠️ विषारी वायू गळती, लगेच दूर जा`;
-//   if (type === "fire") return `🔥 आग लागली आहे, लगेच बाहेर पडा`;
-//   if (type === "earthquake") return `🌍 भूकंप झाला आहे, सुरक्षित ठिकाणी जा`;
-//   if (type === "flood") return `🌊 पूर येत आहे, उंच ठिकाणी जा`;
-//   if (type === "cyclone") return `🌀 चक्रीवादळ येत आहे, घरात राहा`;
-//   if (type === "tsunami") return `🌊🌪️ सुनामीचा धोका, उंच ठिकाणी जा`;
-//   if (type === "heatwave") return `🔥☀️ उष्णतेची लाट, पाणी प्या`;
-//   if (type === "coldwave") return `❄️ थंडीची लाट, उबदार कपडे घाला`;
-//   if (type === "landslide") return `🏔️⚠️ दरड कोसळण्याचा धोका, सुरक्षित ठिकाणी जा`;
-// } 
-
-// else {
-//   if (type === "gas") return `⚠️ TOXIC GAS LEAK, MOVE AWAY IMMEDIATELY`;
-//   if (type === "fire") return `🔥 FIRE DETECTED, EXIT IMMEDIATELY`;
-//   if (type === "earthquake") return `🌍 EARTHQUAKE DETECTED, TAKE COVER`;
-//   if (type === "flood") return `🌊 FLOOD INCOMING, MOVE TO HIGHER GROUND`;
-//   if (type === "cyclone") return `🌀 CYCLONE APPROACHING, STAY INDOORS`;
-//   if (type === "tsunami") return `🌊🌪️ TSUNAMI WARNING, MOVE AWAY FROM SEA`;
-//   if (type === "heatwave") return `🔥☀️ HEATWAVE ALERT, STAY HYDRATED`;
-//   if (type === "coldwave") return `❄️ COLDWAVE ALERT, STAY WARM`;
-//   if (type === "landslide") return `🏔️⚠️ LANDSLIDE RISK, MOVE TO SAFE AREA`;
-// }
-
-
-// };
-
-// const getGuideSteps = (type) => {
-//   const t = type?.trim().toLowerCase(); // ✅ use this
-
-//   // 🌐 HINDI
-//   if (lang === "hi") {
-//     if (t === "earthquake") return ["टेबल के नीचे छिपें", "खिड़कियों से दूर रहें", "लिफ्ट का उपयोग न करें"];
-//     if (t === "flood") return ["ऊंचे स्थान पर जाएं", "पानी से दूर रहें", "बिजली बंद करें"];
-//     if (t === "fire") return ["तुरंत बाहर निकलें", "सीढ़ियों का उपयोग करें", "नाक ढकें"];
-//     if (t === "gas") return ["नाक ढकें", "दूर जाएं", "आग से बचें"];
-//     if (t === "cyclone") return ["घर के अंदर रहें", "खिड़कियां बंद करें", "यात्रा से बचें"];
-//     if (t === "tsunami") return ["ऊंचे स्थान पर जाएं", "समुद्र से दूर रहें", "अलर्ट का पालन करें"];
-//     if (t === "heatwave") return ["पानी पीते रहें", "धूप से बचें", "घर के अंदर रहें"];
-//     if (t === "coldwave") return ["गर्म कपड़े पहनें", "घर के अंदर रहें", "ठंड से बचें"];
-//     if (t === "landslide") return ["ढलानों से दूर रहें", "सतर्क रहें", "जरूरत हो तो सुरक्षित स्थान पर जाएं"];
-
-//     return ["सुरक्षित स्थान पर जाएं"];
-//   }
-
-//   // 🌐 MARATHI
-//   else if (lang === "mr") {
-//     if (t === "earthquake") return ["टेबलखाली लपा", "खिडक्यांपासून दूर रहा", "लिफ्ट वापरू नका"];
-//     if (t === "flood") return ["उंच ठिकाणी जा", "पाण्यापासून दूर रहा", "वीज बंद करा"];
-//     if (t === "fire") return ["लगेच बाहेर पडा", "पायऱ्या वापरा", "नाक झाका"];
-//     if (t === "gas") return ["नाक झाका", "दूर जा", "आगीपासून दूर रहा"];
-//     if (t === "cyclone") return ["घरात राहा", "खिडक्या बंद ठेवा", "प्रवास टाळा"];
-//     if (t === "tsunami") return ["उंच ठिकाणी जा", "समुद्रापासून दूर रहा", "सूचना पाळा"];
-//     if (t === "heatwave") return ["पाणी प्या", "उन्हापासून दूर रहा", "घरात राहा"];
-//     if (t === "coldwave") return ["उबदार कपडे घाला", "घरात राहा", "थंडीपासून बचाव करा"];
-//     if (t === "landslide") return ["डोंगर उतारापासून दूर रहा", "सतर्क रहा", "गरज असल्यास स्थलांतर करा"];
-
-//     return ["सुरक्षित ठिकाणी जा"];
-//   }
-
-//   // 🌐 ENGLISH (default)
-//   else {
-//     if (t === "earthquake") return ["Take cover under table", "Stay away from windows", "Do not use lifts"];
-//     if (t === "flood") return ["Move to higher ground", "Avoid water", "Turn off electricity"];
-//     if (t === "fire") return ["Exit immediately", "Use stairs", "Cover nose"];
-//     if (t === "gas") return ["Cover nose", "Move away", "Avoid fire"];
-//     if (t === "cyclone") return ["Stay indoors", "Close windows", "Avoid travel"];
-//     if (t === "tsunami") return ["Move to higher ground", "Stay away from sea", "Follow alerts"];
-//     if (t === "heatwave") return ["Drink water", "Avoid sun", "Stay indoors"];
-//     if (t === "coldwave") return ["Wear warm clothes", "Stay indoors", "Avoid exposure"];
-//     if (t === "landslide") return ["Move away from slopes", "Stay alert", "Evacuate if needed"];
-
-//     return ["Move to safe place"];
-//   }
-// };
-
-// const getAlertTitle = (type) => {
-//   type = type.toLowerCase();
-
-//   if (lang === "hi") {
-//     if (type === "fire") return "आग अलर्ट!";
-//     if (type === "flood") return "बाढ़ अलर्ट!";
-//     if (type === "earthquake") return "भूकंप अलर्ट!";
-//     if (type === "gas") return "गैस अलर्ट!";
-//     if (type === "cyclone") return "चक्रवात अलर्ट!";
-//     if (type === "tsunami") return "सुनामी अलर्ट!";
-//     if (type === "heatwave") return "हीटवेव अलर्ट!";
-//     if (type === "coldwave") return "कोल्डवेव अलर्ट!";
-//     if (type === "landslide") return "भूस्खलन अलर्ट!";
-    
-//   } 
-//   else if (lang === "mr") {
-//     if (type === "fire") return "आग सूचना!";
-//     if (type === "flood") return "पूर सूचना!";
-//     if (type === "earthquake") return "भूकंप सूचना!";
-//     if (type === "gas") return "गॅस सूचना!";
-//     if (type === "cyclone") return "चक्रीवादळ सूचना!";
-//     if (type === "tsunami") return "सुनामी सूचना!";
-//     if (type === "heatwave") return "उष्णता सूचना!";
-//     if (type === "coldwave") return "थंडी सूचना!";
-//     if (type === "landslide") return "दरड सूचना!";
-    
-//   } 
-//   else {
-//     return `${type.toUpperCase()} ALERT!`;
-//   }
-// };
-
-//   return (
-//     <div className="h-screen flex flex-col items-center justify-center bg-blue-50">
-
-//       {/* Language Selector */}
-      
-//       <h1 className="text-3xl text-gray-700 mb-4">{t.title}</h1>
-//       <p className="text-gray-500">{t.waiting}</p>
-
-//       {/* ALERT SCREEN */}
-//       {alert && (
-//   <div className={`fixed inset-0 ${color} text-white flex flex-col items-center justify-center z-50`}>
-
-//   {/* ✅ ADD THIS */}
-//   <select
-//     value={lang}
-//     onChange={(e) => {
-//       setLang(e.target.value);
-//       localStorage.setItem("lang", e.target.value);
-//     }}
-//     className="absolute top-5 right-5 p-2 text-black rounded"
-//   >
-//     <option value="en">English</option>
-//     <option value="hi">Hindi</option>
-//     <option value="mr">Marathi</option>
-//   </select>
-
-      
-// {!showGuidePage ? (
-
-//   // 🟥 ALERT SCREEN
-//   <>
-   
-//     <h1 className="text-6xl font-bold mb-6">
-     
-//       {getAlertTitle(alert.type)}
-//     </h1>
-
-//     <p className="text-2xl mb-6 text-center px-6">
-//       {alert.message}
-//     </p>
-
-//     <button
-//       onClick={() => {
-//         setShowGuidePage(true);
-//         speakGuide(alert.type);
-//       }}
-//       className="bg-white text-black px-6 py-3 rounded-lg mb-4 animate-pulse"
-//     >
-//       {t.guide}
-//     </button>
-//   </>
-
-// ) : (
-
-//   // 🟩 GUIDE SCREEN
-//   <>
-//   {/* ✅ SYSTEM MESSAGE BOX (ONLY THIS IS WHITE BOX) */}
-//   <div className="mb-6 px-6 py-4 rounded-lg text-center text-lg font-semibold shadow-lg bg-white text-black w-[85%] max-w-md">
-//     {translateMessage("", alert.type)}
-//   </div>
-
-//   {/* ✅ SAFETY STEPS TITLE */}
-//   <h2 className="text-3xl font-bold mb-4">
-//     {lang === "hi"
-//       ? "🛟 सुरक्षा कदम"
-//       : lang === "mr"
-//       ? "🛟 सुरक्षा पावले"
-//       : "🛟 SAFETY STEPS"}
-//   </h2>
-
-//   {/* ✅ STEPS (SEPARATE STYLE — NOT BOX) */}
-//   <div className="flex flex-col gap-3 w-[85%] max-w-md">
-//     {getGuideSteps(alert.type).map((step, i) => (
-//       <div
-//         key={i}
-        
-//         className="flex items-center gap-3 bg-black/20 text-white px-4 py-3 rounded-lg"
-//       >
-//         <span className="text-xl">✅</span>
-//         <span>{step}</span>
-//       </div>
-//     ))}
-//   </div>
-
-//   {/* ✅ BACK BUTTON */}
-//   <button
-//     onClick={() => setShowGuidePage(false)}
-//     className="mt-6 bg-white text-black px-4 py-2 rounded"
-//   >
-//     ⬅ Back
-//   </button>
-// </>
-
-// )}
-
-//     <button
-//       onClick={() => {
-//         setAlert(null);
-//         localStorage.removeItem("alert");
-//       }}
-//       className="bg-black px-4 py-2 rounded"
-//     >
-//       Dismiss
-//     </button>
-//   </div>
-// )}
-//     </div>
-//   );
-// }
 "use client";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
-    <div className="h-screen flex flex-col justify-center items-center bg-black text-white">
-      <h1 className="text-4xl font-bold">WELCOME TO SARATHI</h1>
-      <p className="mt-2">Because Every Life Matters</p>
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=DM+Serif+Display&display=swap');
 
-      <div className="mt-6 space-x-4">
-        <button onClick={() => router.push("/register")} className="bg-blue-500 px-4 py-2 rounded">
-          Register
-        </button>
+        .sarathi-root {
+          min-height: 100vh;
+          background: #0a0f1e;
+          font-family: 'Sora', sans-serif;
+          color: #f0f4ff;
+          position: relative;
+          overflow: hidden;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+        }
 
-        <button onClick={() => router.push("/login")} className="bg-green-500 px-4 py-2 rounded">
-          Login
-        </button>
+        /* Animated background grid */
+        .sarathi-root::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background-image:
+            linear-gradient(rgba(59,130,246,0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(59,130,246,0.04) 1px, transparent 1px);
+          background-size: 40px 40px;
+          pointer-events: none;
+        }
+
+        /* Glow orbs */
+        .orb {
+          position: absolute;
+          border-radius: 50%;
+          filter: blur(80px);
+          pointer-events: none;
+          opacity: 0.3;
+        }
+        .orb-1 {
+          width: 400px; height: 400px;
+          background: #1e40af;
+          top: -100px; left: -100px;
+        }
+        .orb-2 {
+          width: 300px; height: 300px;
+          background: #dc2626;
+          bottom: -80px; right: -80px;
+        }
+        .orb-3 {
+          width: 200px; height: 200px;
+          background: #0891b2;
+          top: 50%; left: 60%;
+        }
+
+        /* Alert strip */
+        .alert-strip {
+          position: absolute;
+          top: 0; left: 0; right: 0;
+          background: linear-gradient(90deg, #dc2626, #b91c1c);
+          padding: 8px 20px;
+          font-size: 12px;
+          font-weight: 600;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          color: #fff;
+        }
+        .alert-dot {
+          width: 8px; height: 8px;
+          background: #fca5a5;
+          border-radius: 50%;
+          animation: blink 1.2s ease-in-out infinite;
+        }
+        @keyframes blink {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.2; }
+        }
+
+        /* Main content */
+        .content {
+          position: relative;
+          z-index: 10;
+          text-align: center;
+          padding: 40px 24px;
+          max-width: 640px;
+        }
+
+        /* Badge */
+        .badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          background: rgba(59,130,246,0.12);
+          border: 1px solid rgba(59,130,246,0.3);
+          padding: 6px 16px;
+          border-radius: 999px;
+          font-size: 11px;
+          font-weight: 600;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: #93c5fd;
+          margin-bottom: 28px;
+        }
+        .badge-dot {
+          width: 6px; height: 6px;
+          background: #60a5fa;
+          border-radius: 50%;
+          animation: blink 1.2s ease-in-out infinite;
+        }
+
+        /* Headline */
+        .headline {
+          font-family: 'DM Serif Display', serif;
+          font-size: clamp(42px, 8vw, 72px);
+          font-weight: 400;
+          line-height: 1.05;
+          margin-bottom: 8px;
+          color: #f0f4ff;
+          letter-spacing: -0.02em;
+        }
+        .headline-accent {
+          color: #ef4444;
+          font-style: italic;
+        }
+        .tagline {
+          font-size: 15px;
+          color: #94a3b8;
+          margin-bottom: 48px;
+          font-weight: 300;
+          letter-spacing: 0.04em;
+        }
+
+        /* Stats row */
+        .stats-row {
+          display: flex;
+          justify-content: center;
+          gap: 32px;
+          margin-bottom: 48px;
+          flex-wrap: wrap;
+        }
+        .stat {
+          text-align: center;
+        }
+        .stat-number {
+          font-size: 24px;
+          font-weight: 700;
+          color: #f0f4ff;
+          display: block;
+        }
+        .stat-label {
+          font-size: 11px;
+          color: #64748b;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+        }
+        .stat-divider {
+          width: 1px;
+          background: rgba(255,255,255,0.08);
+          align-self: stretch;
+        }
+
+        /* Buttons */
+        .btn-group {
+          display: flex;
+          gap: 12px;
+          justify-content: center;
+          flex-wrap: wrap;
+          margin-bottom: 48px;
+        }
+        .btn-primary {
+          background: #2563eb;
+          color: #fff;
+          border: none;
+          padding: 14px 32px;
+          border-radius: 8px;
+          font-family: 'Sora', sans-serif;
+          font-size: 14px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          letter-spacing: 0.02em;
+        }
+        .btn-primary:hover {
+          background: #1d4ed8;
+          transform: translateY(-1px);
+          box-shadow: 0 8px 24px rgba(37,99,235,0.4);
+        }
+        .btn-secondary {
+          background: transparent;
+          color: #f0f4ff;
+          border: 1px solid rgba(255,255,255,0.2);
+          padding: 14px 32px;
+          border-radius: 8px;
+          font-family: 'Sora', sans-serif;
+          font-size: 14px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+        .btn-secondary:hover {
+          border-color: rgba(255,255,255,0.4);
+          background: rgba(255,255,255,0.05);
+          transform: translateY(-1px);
+        }
+        .btn-emergency {
+          background: linear-gradient(135deg, #dc2626, #b91c1c);
+          color: #fff;
+          border: none;
+          padding: 14px 28px;
+          border-radius: 8px;
+          font-family: 'Sora', sans-serif;
+          font-size: 14px;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          letter-spacing: 0.02em;
+        }
+        .btn-emergency:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 8px 24px rgba(220,38,38,0.5);
+        }
+
+        /* Feature cards */
+        .feature-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 12px;
+          max-width: 640px;
+          width: 100%;
+        }
+        @media (max-width: 600px) {
+          .feature-grid { grid-template-columns: 1fr; }
+          .stats-row { gap: 20px; }
+          .stat-divider { display: none; }
+        }
+        .feature-card {
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(255,255,255,0.07);
+          border-radius: 12px;
+          padding: 16px;
+          text-align: left;
+          transition: all 0.2s ease;
+        }
+        .feature-card:hover {
+          background: rgba(255,255,255,0.06);
+          border-color: rgba(255,255,255,0.12);
+          transform: translateY(-2px);
+        }
+        .feature-icon {
+          width: 36px; height: 36px;
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 18px;
+          margin-bottom: 10px;
+        }
+        .icon-blue { background: rgba(37,99,235,0.15); }
+        .icon-red { background: rgba(220,38,38,0.15); }
+        .icon-green { background: rgba(5,150,105,0.15); }
+        .feature-title {
+          font-size: 13px;
+          font-weight: 600;
+          color: #e2e8f0;
+          margin-bottom: 4px;
+        }
+        .feature-desc {
+          font-size: 11px;
+          color: #64748b;
+          line-height: 1.5;
+        }
+
+        /* Footer */
+        .footer-note {
+          position: absolute;
+          bottom: 20px;
+          font-size: 11px;
+          color: #334155;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+        }
+
+        /* Fade-in animation */
+        .fade-in {
+          opacity: 0;
+          transform: translateY(20px);
+          animation: fadeUp 0.6s ease forwards;
+        }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+        .delay-5 { animation-delay: 0.5s; }
+        @keyframes fadeUp {
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+
+      <div className="sarathi-root">
+        {/* Orbs */}
+        <div className="orb orb-1" />
+        <div className="orb orb-2" />
+        <div className="orb orb-3" />
+
+        {/* Alert strip */}
+        <div className="alert-strip">
+          <div className="alert-dot" />
+          Emergency Helpline Active — Dial 112 for Immediate Assistance
+          <div className="alert-dot" />
+        </div>
+
+        {/* Main content */}
+        <div className="content">
+          <div className={`badge ${mounted ? "fade-in" : ""}`}>
+            <div className="badge-dot" />
+            National Emergency Response Platform
+          </div>
+
+          <h1 className={`headline ${mounted ? "fade-in delay-1" : ""}`}>
+            SARATHI<br />
+            <span className="headline-accent">Saves Lives</span>
+          </h1>
+
+          <p className={`tagline ${mounted ? "fade-in delay-2" : ""}`}>
+            Because Every Life Matters — Rapid Response. Real Relief.
+          </p>
+
+          {/* Stats */}
+          <div className={`stats-row ${mounted ? "fade-in delay-2" : ""}`}>
+            <div className="stat">
+              <span className="stat-number">29+</span>
+              <span className="stat-label">States Covered</span>
+            </div>
+            <div className="stat-divider" />
+            <div className="stat">
+              <span className="stat-number">24/7</span>
+              <span className="stat-label">Active Support</span>
+            </div>
+            <div className="stat-divider" />
+            <div className="stat">
+              <span className="stat-number">112</span>
+              <span className="stat-label">Emergency Line</span>
+            </div>
+          </div>
+
+          {/* Buttons */}
+          <div className={`btn-group ${mounted ? "fade-in delay-3" : ""}`}>
+            <button className="btn-primary" onClick={() => router.push("/register")}>
+              Register Now
+            </button>
+            <button className="btn-secondary" onClick={() => router.push("/login")}>
+              Login
+            </button>
+            <button className="btn-emergency" onClick={() => router.push("/emergency")}>
+              <span>⚠</span> SOS
+            </button>
+          </div>
+
+          {/* Feature cards */}
+          <div className={`feature-grid ${mounted ? "fade-in delay-4" : ""}`}>
+            <div className="feature-card">
+              <div className="feature-icon icon-blue">🛡️</div>
+              <div className="feature-title">Verified Admins</div>
+              <div className="feature-desc">Gov ID & Aadhaar verified officials only</div>
+            </div>
+            <div className="feature-card">
+              <div className="feature-icon icon-red">🚨</div>
+              <div className="feature-title">Crisis Response</div>
+              <div className="feature-desc">Real-time disaster & emergency alerts</div>
+            </div>
+            <div className="feature-card">
+              <div className="feature-icon icon-green">🌐</div>
+              <div className="feature-title">Multi-language</div>
+              <div className="feature-desc">Support in all Indian languages</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="footer-note">
+          Govt. of India Initiative · SARATHI Emergency Platform
+        </div>
       </div>
-    </div>
+    </>
   );
 }
+
