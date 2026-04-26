@@ -1,203 +1,4 @@
-// "use client";
-// import useTranslation from "../utils/useTranslation";
-// import { validStates } from "../utils/states";
-// import { useState, useEffect } from "react";
-// import BackButton from "../components/BackButton";
-// import LanguageSelector from "../components/LanguageSelector";
 
-// export default function Admin() {
-//   const { t } = useTranslation();
-//   const [affectedState, setAffectedState] = useState("");
-//   const [type, setType] = useState("");
-//   const [message, setMessage] = useState("");
-//   const [users, setUsers] = useState([]);
-//   const [showUsers, setShowUsers] = useState(false);
-// const [customType, setCustomType] = useState("");
-
-//   useEffect(() => {
-//   const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
-//   setUsers(storedUsers);
-// }, []);
-
-// const sendAlert = () => {
-//   if (!type || !message || !affectedState) {
-//     alert("Fill all fields including state");
-//     return;
-//   }
-
-//   const finalType = type === "custom" ? customType : type;
-
-// localStorage.setItem(
-//   "alert",
-//   JSON.stringify({ type: finalType, message })
-// );
-
-//   setShowUsers(true);
-
-//   alert("Alert Sent!");
-// };
-
-// const stopAlert = () => {
-//   // ❌ Remove alert
-//   localStorage.removeItem("alert");
-
-//   // 🔄 Reset UI
-//   setShowUsers(false);
-//   setType("");
-//   setMessage("");
-//   setAffectedState("");
-
-//   alert("🛑 Alert Stopped");
-// };
-
-// const emergencyUsers = users.filter(
-//   (u) =>
-//     u.profile === "elderly" ||
-//     u.profile === "physically_disabled" ||
-//     u.profile === "blind" ||
-//     u.profile === "deaf"
-// );
-  
-     
-//   return (
-//     <div className="p-10">
-//         <BackButton redirectTo="/" />
-//         <LanguageSelector />
-        
-
-//       <>
-//       {/* 🔥 Heading */}
-//       <h1 className="text-2xl mb-6">{t.sendAlert}</h1>
-
-//       {/* 🔥 Disaster Type */}
-     
-// <select
-//   value={type}
-//   onChange={(e) => setType(e.target.value)}
-//   className="border p-2 mb-2 block w-full bg-white text-black"
-// >
-//   <option value="" disabled hidden>Select Disaster</option>
-
-//   <option value="fire">Fire</option>
-//   <option value="flood">Flood</option>
-//   <option value="earthquake">Earthquake</option>
-//   <option value="gasleak">Gas Leak</option>
-//   <option value="chemical">Chemical</option>
-//   <option value="cyclone">Cyclone</option>
-//   <option value="tsunami">Tsunami</option>
-//   <option value="heatwave">Heatwave</option>
-//   <option value="coldwave">Coldwave</option>
-//   <option value="landslide">Landslide</option>
-
-//   <option value="custom">Other (Type manually)</option>
-// </select>
-      
-// {/* ✅ Show input ONLY if custom selected */}
-// {type === "custom" && (
-//   <input
-//     placeholder="Enter disaster type"
-//     value={customType}
-//     onChange={(e) => setCustomType(e.target.value)}
-//     className="border p-2 mb-4 w-full"
-//   />
-// )}
-
-//       {/* 🔥 Message */}
-      
-//       <input
-//   value={message}   // ✅ ADD
-//   placeholder={t.message}
-//   className="border p-2 mb-4 block w-full"
-//   onChange={(e) => setMessage(e.target.value)}
-// />
-
-//       {/* 🔥 State Dropdown */}
-//       <select
-//         className="border p-2 mb-4 block w-full bg-white text-black"
-//         value={affectedState}
-//         onChange={(e) => setAffectedState(e.target.value)}
-//       >
-//         <option value="" disabled>
-//           {t.selectState}
-//         </option>
-
-//         {validStates.map((state) => (
-//           <option key={state} value={state}>
-//             {state}
-//           </option>
-//         ))}
-//       </select>
-
-//       {/* 🔥 Button */}
-//       <button
-//         onClick={sendAlert}
-//         className="bg-red-500 text-white px-6 py-2"
-//       >
-//         {t.sendAlert}
-//       </button>
-//     </>
-
-//     <button
-//   onClick={stopAlert}
-//   className="bg-gray-700 text-white px-6 py-2 mt-3"
-// >
-//   Stop Alert
-// </button>
-
-//       {showUsers && (
-//   <>
-//     <h3 className="mt-6 font-bold">🚨 Vulnerable Users</h3>
-
-//     {emergencyUsers.length === 0 && (
-//       <p>No vulnerable users found</p>
-//     )}
-
-//     {emergencyUsers.map((u, index) => (
-      
-//       <div
-//   key={index}
-//   className="bg-white border-l-4 border-red-500 p-4 mt-3 rounded-lg shadow"
-// >
-//   <h3 className="font-bold text-lg text-black">
-//     {u.name || "Unknown User"}
-//   </h3>
-
-//   <p className="text-sm text-gray-600">
-//     {u.profile}
-//   </p>
-
-//   <p className="text-sm text-black mt-1">
-//     📞 {u.phone || "Not available"}
-//   </p>
-
-//   <p className="text-sm text-gray-700">
-//     🚨 {u.emergencyContact || "Not available"}
-//   </p>
-
-//   {u.location && (
-//     <>
-//       <p className="text-xs text-gray-500 mt-2">
-//         📍 {u.location.lat}, {u.location.lng}
-//       </p>
-
-//       <a
-//         href={`https://www.google.com/maps?q=${u.location.lat},${u.location.lng}`}
-//         target="_blank"
-//         className="text-blue-500 underline text-sm"
-//       >
-//         View on Map
-//       </a>
-//     </>
-//   )}
-// </div> 
-
-//     ))}
-//   </>
-// )}
-
-//     </div>
-//   );
-// }
 
 "use client";
 import useTranslation from "../utils/useTranslation";
@@ -205,6 +6,9 @@ import { validStates } from "../utils/states";
 import { useState, useEffect } from "react";
 import BackButton from "../components/BackButton";
 import LanguageSelector from "../components/LanguageSelector";
+import { db } from "../lib/firebase";
+import { ref, set, onValue, remove } from "firebase/database";
+import { getUsers } from "../lib/firebaseHelpers";
 
 const disasterOptions = [
   { value: "fire",       label: "🔥 Fire",       color: "#ef4444" },
@@ -239,11 +43,32 @@ export default function Admin() {
   const [sending, setSending] = useState(false);
   const [toast, setToast] = useState(null);
 
+  // ── Load users from Firebase (was: localStorage.getItem("users")) ──────────
   useEffect(() => {
-    const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
-    setUsers(storedUsers);
-    const existing = localStorage.getItem("alert");
-    if (existing) { setAlertActive(true); setShowUsers(true); }
+    async function fetchUsers() {
+      try {
+        const allUsers = await getUsers();
+        setUsers(allUsers);
+      } catch (err) {
+        console.error("Error fetching users:", err);
+      }
+    }
+    fetchUsers();
+  }, []);
+
+  // ── Listen for active alert from Firebase (was: localStorage.getItem("alert")) ──
+  useEffect(() => {
+    const alertRef = ref(db, "activeAlert");
+    const unsubscribe = onValue(alertRef, (snapshot) => {
+      if (snapshot.exists()) {
+        setAlertActive(true);
+        setShowUsers(true);
+      } else {
+        setAlertActive(false);
+        setShowUsers(false);
+      }
+    });
+    return () => unsubscribe();
   }, []);
 
   const showToast = (msg, type = "success") => {
@@ -251,6 +76,7 @@ export default function Admin() {
     setTimeout(() => setToast(null), 3000);
   };
 
+  // ── sendAlert: was localStorage.setItem("alert", ...), now Firebase set ────
   const sendAlert = async () => {
     if (!type || !message || !affectedState) {
       showToast("Please fill all fields including state.", "error");
@@ -258,23 +84,38 @@ export default function Admin() {
     }
     const finalType = type === "custom" ? customType : type;
     setSending(true);
-    await new Promise(r => setTimeout(r, 800));
-    localStorage.setItem("alert", JSON.stringify({ type: finalType, message }));
-    setAlertActive(true);
-    setShowUsers(true);
+    try {
+      await set(ref(db, "activeAlert"), {
+        type: finalType,
+        message,
+        state: affectedState,
+        timestamp: new Date().toISOString(),
+      });
+      setAlertActive(true);
+      setShowUsers(true);
+      showToast("🚨 Alert sent successfully!", "success");
+    } catch (err) {
+      showToast("Failed to send alert. Try again.", "error");
+      console.error(err);
+    }
     setSending(false);
-    showToast("🚨 Alert sent successfully!", "success");
   };
 
-  const stopAlert = () => {
-    localStorage.removeItem("alert");
-    setAlertActive(false);
-    setShowUsers(false);
-    setType("");
-    setMessage("");
-    setAffectedState("");
-    setCustomType("");
-    showToast("🛑 Alert stopped.", "info");
+  // ── stopAlert: was localStorage.removeItem("alert"), now Firebase remove ───
+  const stopAlert = async () => {
+    try {
+      await remove(ref(db, "activeAlert"));
+      setAlertActive(false);
+      setShowUsers(false);
+      setType("");
+      setMessage("");
+      setAffectedState("");
+      setCustomType("");
+      showToast("🛑 Alert stopped.", "info");
+    } catch (err) {
+      showToast("Failed to stop alert.", "error");
+      console.error(err);
+    }
   };
 
   const emergencyUsers = users.filter(u =>
@@ -320,7 +161,6 @@ export default function Admin() {
           filter: blur(80px); pointer-events: none;
         }
 
-        /* Top bar */
         .top-bar {
           position: sticky; top: 0; z-index: 50;
           display: flex; align-items: center; justify-content: space-between;
@@ -339,20 +179,14 @@ export default function Admin() {
         }
         .top-right { display: flex; align-items: center; gap: 10px; }
 
-        /* Content */
         .content { max-width: 560px; margin: 0 auto; padding: 28px 16px; }
 
-        /* Page title */
-        .page-header {
-          margin-bottom: 28px;
-          animation: fadeUp 0.5s ease both;
-        }
+        .page-header { margin-bottom: 28px; animation: fadeUp 0.5s ease both; }
         @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:none} }
         .page-title { font-size: 26px; font-weight: 800; }
         .page-title span { color: #ef4444; }
         .page-sub { font-size: 13px; color: rgba(255,255,255,0.35); margin-top: 4px; }
 
-        /* Active alert banner */
         .active-banner {
           display: flex; align-items: center; justify-content: space-between;
           background: rgba(220,38,38,0.1); border: 1px solid rgba(220,38,38,0.35);
@@ -378,7 +212,6 @@ export default function Admin() {
         }
         .btn-stop:hover { background: rgba(220,38,38,0.35); color: #fff; }
 
-        /* Card */
         .card {
           background: rgba(255,255,255,0.03);
           border: 1px solid rgba(255,255,255,0.08);
@@ -393,7 +226,6 @@ export default function Admin() {
         }
         .card-title-line { flex: 1; height: 1px; background: rgba(255,255,255,0.07); }
 
-        /* Disaster type grid */
         .disaster-grid {
           display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
           margin-bottom: 4px;
@@ -413,10 +245,8 @@ export default function Admin() {
           box-shadow: 0 0 12px color-mix(in srgb, var(--sel-color, #ef4444) 30%, transparent);
         }
 
-        /* Custom input */
         .custom-input-wrap { margin-top: 10px; }
 
-        /* Input */
         .input-label {
           display: block; font-size: 11px; font-weight: 600;
           color: rgba(255,255,255,0.4); text-transform: uppercase;
@@ -438,17 +268,14 @@ export default function Admin() {
         .sarathi-select option { background: #1a1a2e; color: #fff; }
         .sarathi-textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
 
-        /* Char counter */
         .char-count { text-align: right; font-size: 11px; color: rgba(255,255,255,0.25); margin-top: 5px; font-family: 'JetBrains Mono', monospace; }
 
-        /* Preview tag */
         .preview-tag {
           display: inline-flex; align-items: center; gap: 6px;
           margin-top: 10px; padding: 6px 12px; border-radius: 8px;
           font-size: 12px; font-weight: 600; border: 1px solid;
         }
 
-        /* Send button */
         .btn-send {
           width: 100%; padding: 15px; border: none; border-radius: 12px;
           background: linear-gradient(135deg, #dc2626, #b91c1c);
@@ -471,7 +298,6 @@ export default function Admin() {
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Users section */
         .users-section { animation: fadeUp 0.5s ease both; }
         .users-title {
           font-size: 16px; font-weight: 700; margin-bottom: 16px;
@@ -527,7 +353,6 @@ export default function Admin() {
           font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 6px;
         }
 
-        /* Toast */
         .toast {
           position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
           padding: 12px 22px; border-radius: 12px;
@@ -541,7 +366,6 @@ export default function Admin() {
         .toast.error   { background: rgba(220,38,38,0.15); border: 1px solid rgba(220,38,38,0.3); color: #f87171; }
         .toast.info    { background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3); color: #a5b4fc; }
 
-        /* SOS strip */
         .sos-strip {
           position: fixed; bottom: 0; left: 0; right: 0;
           background: rgba(220,38,38,0.9); padding: 10px;
@@ -602,7 +426,6 @@ export default function Admin() {
               ))}
             </div>
 
-            {/* Custom type input */}
             {type === "custom" && (
               <div className="custom-input-wrap">
                 <label className="input-label" style={{ marginTop: 12 }}>Custom Disaster Type</label>
@@ -615,7 +438,6 @@ export default function Admin() {
               </div>
             )}
 
-            {/* Preview */}
             {type && type !== "custom" && (
               <div
                 className="preview-tag"
@@ -720,7 +542,6 @@ export default function Admin() {
           🚨 Emergency Helpline: <strong>112</strong> &nbsp;|&nbsp; Available 24×7
         </div>
 
-        {/* Toast */}
         {toast && <div className={`toast ${toast.type}`}>{toast.msg}</div>}
       </div>
     </>
