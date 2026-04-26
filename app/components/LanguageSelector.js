@@ -1,57 +1,3 @@
-// // export default function LanguageSelector({ lang, setLang }) {
-
-// //   const changeLang = (value) => {
-// //     setLang(value); // ✅ update parent (NO refresh)
-// //     localStorage.setItem("lang", value); // ✅ persist
-// //   };
-
-// //   return (
-// //     <select
-// //       value={lang}
-// //       onChange={(e) => changeLang(e.target.value)}
-// //       className="fixed top-4 right-28 bg-white text-black border shadow px-4 py-2 rounded z-50"
-// //     >
-// //       <option value="en">English</option>
-// //       <option value="hi">Hindi</option>
-// //       <option value="mr">Marathi</option>
-// //       <option value="gu">Gujarati</option>
-// //       <option value="ta">Tamil</option>
-// //       <option value="te">Telugu</option>
-// //       <option value="kn">Kannada</option>
-// //       <option value="ml">Malayalam</option>
-// //       <option value="bn">Bengali</option>
-// //       <option value="pa">Punjabi</option>
-// //       <option value="or">Odia</option>
-// //     </select>
-// //   );
-// // }
-
-// import { useLanguage } from "../context/LanguageContext";
-
-// export default function LanguageSelector() {
-//   const { lang, setLang } = useLanguage();
-
-//   return (
-//     <select
-//       value={lang}
-//       onChange={(e) => setLang(e.target.value)}
-//       className="fixed top-4 right-28 bg-white text-black border shadow px-4 py-2 rounded z-50"
-//     >
-//       <option value="en">English</option>
-//       <option value="hi">Hindi</option>
-//       <option value="mr">Marathi</option>
-//       <option value="gu">Gujarati</option>
-//       <option value="ta">Tamil</option>
-//       <option value="te">Telugu</option>
-//       <option value="kn">Kannada</option>
-//       <option value="ml">Malayalam</option>
-//       <option value="bn">Bengali</option>
-//       <option value="pa">Punjabi</option>
-//       <option value="or">Odia</option>
-//     </select>
-//   );
-// }
-
 "use client";
 import { useState, useRef, useEffect } from "react";
 import { useLanguage } from "../context/LanguageContext";
@@ -94,141 +40,36 @@ export default function LanguageSelector() {
   };
 
   return (
-    <>
-      <style>{`
-        .lang-wrap {
-          position: relative;
-          display: inline-block;
-          font-family: 'Sora', sans-serif;
-          z-index: 100;
-        }
+    <div className="relative inline-block font-sora z-[100]" ref={ref}>
+      {/* Trigger button */}
+      <button
+        className={`inline-flex items-center gap-1.5 py-2 px-3 rounded-xl bg-white/5 border text-white/75 text-[13px] font-medium cursor-pointer transition-all duration-200 backdrop-blur-md whitespace-nowrap select-none hover:bg-white/10 hover:border-white/20 hover:text-white ${open ? 'border-red-600/40 bg-white/10 text-white' : 'border-white/10'}`}
+        onClick={() => setOpen((o) => !o)}
+      >
+        <span className="text-[15px] leading-none">{current.flag}</span>
+        <span className="text-[13px]">{current.label}</span>
+        <span className={`text-[10px] opacity-50 ml-0.5 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}>▼</span>
+      </button>
 
-        .lang-trigger {
-          display: inline-flex;
-          align-items: center;
-          gap: 7px;
-          padding: 8px 12px;
-          border-radius: 10px;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          color: rgba(255, 255, 255, 0.75);
-          font-size: 13px;
-          font-weight: 500;
-          cursor: pointer;
-          transition: background 0.2s, border-color 0.2s, color 0.2s;
-          backdrop-filter: blur(8px);
-          white-space: nowrap;
-          user-select: none;
-        }
-        .lang-trigger:hover {
-          background: rgba(255, 255, 255, 0.1);
-          border-color: rgba(255, 255, 255, 0.2);
-          color: #fff;
-        }
-        .lang-trigger.open {
-          background: rgba(255, 255, 255, 0.1);
-          border-color: rgba(220, 38, 38, 0.4);
-          color: #fff;
-        }
-
-        .lang-flag { font-size: 15px; line-height: 1; }
-        .lang-label { font-size: 13px; }
-        .lang-chevron {
-          font-size: 10px;
-          opacity: 0.5;
-          transition: transform 0.2s;
-          margin-left: 2px;
-        }
-        .lang-trigger.open .lang-chevron { transform: rotate(180deg); }
-
-        /* Dropdown */
-        .lang-dropdown {
-          position: absolute;
-          top: calc(100% + 8px);
-          right: 0;
-          background: #0d1117;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 14px;
-          padding: 6px;
-          min-width: 160px;
-          box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.04);
-          backdrop-filter: blur(20px);
-          animation: dropIn 0.18s ease;
-          overflow: hidden;
-        }
-        @keyframes dropIn {
-          from { opacity: 0; transform: translateY(-6px) scale(0.97); }
-          to   { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        .lang-option {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          padding: 9px 12px;
-          border-radius: 8px;
-          cursor: pointer;
-          font-size: 13px;
-          color: rgba(255, 255, 255, 0.6);
-          transition: background 0.15s, color 0.15s;
-        }
-        .lang-option:hover {
-          background: rgba(255, 255, 255, 0.07);
-          color: #fff;
-        }
-        .lang-option.selected {
-          background: rgba(220, 38, 38, 0.12);
-          color: #f87171;
-          font-weight: 600;
-        }
-        .lang-option.selected .lang-check {
-          display: inline;
-        }
-        .lang-check {
-          display: none;
-          margin-left: auto;
-          font-size: 11px;
-          color: #ef4444;
-        }
-
-        .lang-divider {
-          height: 1px;
-          background: rgba(255,255,255,0.06);
-          margin: 4px 6px;
-        }
-      `}</style>
-
-      <div className="lang-wrap" ref={ref}>
-        {/* Trigger button */}
-        <button
-          className={`lang-trigger${open ? " open" : ""}`}
-          onClick={() => setOpen((o) => !o)}
-        >
-          <span className="lang-flag">{current.flag}</span>
-          <span className="lang-label">{current.label}</span>
-          <span className="lang-chevron">▼</span>
-        </button>
-
-        {/* Dropdown */}
-        {open && (
-          <div className="lang-dropdown">
-            {languages.map((l, i) => (
-              <div key={l.value}>
-                <div
-                  className={`lang-option${lang === l.value ? " selected" : ""}`}
-                  onClick={() => handleSelect(l.value)}
-                >
-                  <span className="lang-flag">{l.flag}</span>
-                  <span>{l.label}</span>
-                  <span className="lang-check">✓</span>
-                </div>
-                {/* Divider after English */}
-                {i === 0 && <div className="lang-divider" />}
+      {/* Dropdown */}
+      {open && (
+        <div className="absolute top-[calc(100%+8px)] right-0 bg-[#0d1117] border border-white/10 rounded-2xl p-1.5 min-w-[160px] shadow-[0_16px_40px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.04)] backdrop-blur-xl animate-[dropIn_0.18s_ease] overflow-hidden">
+          {languages.map((l, i) => (
+            <div key={l.value}>
+              <div
+                className={`flex items-center gap-2.5 py-2.5 px-3 rounded-lg cursor-pointer text-[13px] transition-colors duration-150 hover:bg-white/5 hover:text-white ${lang === l.value ? 'bg-red-600/15 text-red-400 font-semibold' : 'text-white/60'}`}
+                onClick={() => handleSelect(l.value)}
+              >
+                <span className="text-[15px] leading-none">{l.flag}</span>
+                <span>{l.label}</span>
+                {lang === l.value && <span className="ml-auto text-[11px] text-red-500 font-bold">✓</span>}
               </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </>
+              {/* Divider after English */}
+              {i === 0 && <div className="h-px bg-white/5 my-1 mx-1.5" />}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }

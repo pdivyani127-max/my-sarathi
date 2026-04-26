@@ -1,5 +1,3 @@
-
-
 "use client";
 import { disasterConfig } from "../data/disasterConfig";
 import { useEffect, useState } from "react";
@@ -81,7 +79,6 @@ export default function Home() {
   const [alertPulse, setAlertPulse] = useState(false);
   const [dismissed, setDismissed] = useState(false);
 
-  // Web Audio siren — no mp3 file needed
   const playSiren = () => {
     try {
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -108,7 +105,6 @@ export default function Home() {
     }
   };
 
-  // ── Listen for alert from Firebase (was: localStorage + window storage event) ──
   useEffect(() => {
     setMounted(true);
     const alertRef = ref(db, "activeAlert");
@@ -128,9 +124,6 @@ export default function Home() {
     return () => unsubscribe();
   }, []);
 
-
-
-  // Alert pulse interval
   useEffect(() => {
     if (!alert) return;
     const id = setInterval(() => setAlertPulse(p => !p), 800);
@@ -210,145 +203,37 @@ export default function Home() {
   // ─── ALERT OVERLAY ───────────────────────────────────────────────
   if (alert && showAlertPage && !dismissed) {
     return (
-      <>
-        <style>{`
-          @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=JetBrains+Mono:wght@500&display=swap');
-          * { box-sizing: border-box; margin: 0; padding: 0; }
-          .alert-root {
-            min-height: 100vh;
-            background: ${color || "#dc2626"};
-            font-family: 'Sora', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-          }
-          .alert-root::before {
-            content: '';
-            position: fixed; inset: 0;
-            background: repeating-linear-gradient(
-              45deg,
-              rgba(0,0,0,0.04) 0px, rgba(0,0,0,0.04) 20px,
-              transparent 20px, transparent 40px
-            );
-            pointer-events: none;
-          }
-          .alert-flash {
-            position: fixed; inset: 0;
-            background: rgba(255,255,255,0.06);
-            animation: flash 1s ease-in-out infinite;
-            pointer-events: none;
-          }
-          @keyframes flash { 0%,100%{opacity:0} 50%{opacity:1} }
+      <div className="fixed inset-0 min-h-screen font-sora flex flex-col items-center justify-center relative overflow-hidden z-[100] text-white">
+          <div className="absolute inset-0 transition-colors duration-[2s] pointer-events-none" style={{ backgroundColor: color || "#dc2626" }}>
+            <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,rgba(0,0,0,0.04)_0px,rgba(0,0,0,0.04)_20px,transparent_20px,transparent_40px)]" />
+          </div>
+          <div className="absolute inset-0 bg-white/5 animate-[pulse_1s_ease-in-out_infinite] pointer-events-none" />
 
-          .alert-top {
-            position: fixed; top: 0; left: 0; right: 0;
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 14px 20px;
-            background: rgba(0,0,0,0.2);
-            backdrop-filter: blur(8px);
-            z-index: 10;
-          }
-          .alert-badge {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 11px; font-weight: 500;
-            background: rgba(0,0,0,0.3); color: rgba(255,255,255,0.8);
-            padding: 5px 12px; border-radius: 20px; letter-spacing: 1px;
-          }
-
-          .alert-body { z-index: 2; display: flex; flex-direction: column; align-items: center; padding: 100px 20px 80px; width: 100%; max-width: 480px; }
-
-          .alert-icon { font-size: 72px; margin-bottom: 16px; animation: iconPulse 0.8s ease-in-out infinite alternate; }
-          @keyframes iconPulse { from{transform:scale(1)} to{transform:scale(1.1)} }
-
-          .alert-type {
-            font-size: 52px; font-weight: 800; color: #fff;
-            letter-spacing: 3px; text-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            margin-bottom: 8px; text-align: center;
-          }
-          .alert-sub {
-            font-size: 13px; color: rgba(255,255,255,0.6);
-            letter-spacing: 2px; text-transform: uppercase; margin-bottom: 28px;
-          }
-
-          .alert-message-box {
-            width: 100%;
-            background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 16px; padding: 18px 22px; text-align: center;
-            font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 24px;
-            backdrop-filter: blur(8px);
-          }
-
-          .alert-actions { display: flex; flex-direction: column; gap: 12px; width: 100%; }
-
-          .btn-guide {
-            width: 100%; padding: 16px; background: #fff; color: #000;
-            border: none; border-radius: 12px; font-size: 16px; font-weight: 700;
-            font-family: 'Sora', sans-serif; cursor: pointer;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-            animation: guidePulse 1.5s ease-in-out infinite; transition: transform 0.15s;
-          }
-          .btn-guide:hover { transform: scale(1.02); }
-          @keyframes guidePulse { 0%,100%{box-shadow:0 8px 24px rgba(0,0,0,0.2)} 50%{box-shadow:0 8px 40px rgba(0,0,0,0.4)} }
-
-          .btn-dismiss {
-            width: 100%; padding: 13px; background: rgba(0,0,0,0.3);
-            color: rgba(255,255,255,0.7); border: 1px solid rgba(0,0,0,0.2);
-            border-radius: 12px; font-size: 14px; font-weight: 500;
-            font-family: 'Sora', sans-serif; cursor: pointer; transition: background 0.2s;
-          }
-          .btn-dismiss:hover { background: rgba(0,0,0,0.5); color: #fff; }
-
-          .guide-msg {
-            width: 100%; background: rgba(0,0,0,0.2);
-            border: 1px solid rgba(255,255,255,0.15); border-radius: 16px;
-            padding: 18px 22px; font-size: 15px; font-weight: 500; color: #fff;
-            margin-bottom: 24px; line-height: 1.6; backdrop-filter: blur(8px);
-          }
-          .steps-title { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 14px; align-self: flex-start; }
-          .steps-list { display: flex; flex-direction: column; gap: 10px; width: 100%; margin-bottom: 20px; }
-          .step-item {
-            display: flex; align-items: center; gap: 12px;
-            background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px; padding: 14px 16px; color: #fff; font-size: 14px;
-            animation: stepIn 0.4s ease both;
-          }
-          @keyframes stepIn { from{opacity:0;transform:translateX(-16px)} to{opacity:1;transform:none} }
-          .step-num {
-            min-width: 28px; height: 28px; background: rgba(255,255,255,0.2);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 12px; font-weight: 700;
-          }
-          .btn-back-guide {
-            padding: 12px 28px; background: rgba(255,255,255,0.15); color: #fff;
-            border: 1px solid rgba(255,255,255,0.3); border-radius: 10px;
-            font-size: 14px; font-weight: 600; font-family: 'Sora', sans-serif; cursor: pointer;
-          }
-        `}</style>
-        <div className="alert-root">
-          <div className="alert-flash" />
-          <div className="alert-top">
-            <div className="alert-badge">🚨 EMERGENCY ALERT ACTIVE</div>
+          <div className="fixed top-0 left-0 right-0 flex justify-between items-center py-[14px] px-5 bg-black/20 backdrop-blur-md z-10">
+            <div className="font-jetbrains text-[11px] font-medium bg-black/30 text-white/80 py-[5px] px-3 rounded-full tracking-wide">
+              🚨 EMERGENCY ALERT ACTIVE
+            </div>
             <LanguageSelector />
           </div>
 
-          <div className="alert-body">
+          <div className="relative z-[2] flex flex-col items-center pt-[100px] px-5 pb-20 w-full max-w-[480px]">
             {!showGuidePage ? (
               <>
-                <div className="alert-icon">
+                <div className="text-[72px] mb-4 animate-[iconPulse_0.8s_ease-in-out_infinite_alternate]">
                   {disasterMeta[type.toUpperCase()]?.emoji || "⚠️"}
                 </div>
-                <div className="alert-type">{title || type.toUpperCase()}</div>
-                <div className="alert-sub">Emergency Alert — Sarathi</div>
-                <div className="alert-message-box">{adminMessage}</div>
-                <div className="alert-actions">
-                  <button className="btn-guide" onClick={() => { setShowGuidePage(true); speakGuide(); }}>
+                <div className="text-[52px] font-extrabold text-white tracking-[3px] text-shadow-[0_4px_20px_rgba(0,0,0,0.3)] mb-2 text-center drop-shadow-xl">
+                    {title || type.toUpperCase()}
+                </div>
+                <div className="text-[13px] text-white/60 tracking-[2px] uppercase mb-7">Emergency Alert — Sarathi</div>
+                <div className="w-full bg-black/25 border border-white/20 rounded-2xl py-[18px] px-5 text-center text-base font-semibold text-white mb-6 backdrop-blur-md">
+                    {adminMessage}
+                </div>
+                <div className="flex flex-col gap-3 w-full">
+                  <button className="w-full py-4 bg-white text-black border-none rounded-xl text-base font-bold font-sora cursor-pointer shadow-[0_8px_24px_rgba(0,0,0,0.2)] animate-[guidePulse_1.5s_ease-in-out_infinite] transition-transform hover:scale-[1.02] active:scale-95" onClick={() => { setShowGuidePage(true); speakGuide(); }}>
                     🛟 {t.guide}
                   </button>
-                  {/* Dismiss: only hides locally, does NOT remove from Firebase */}
-                  <button className="btn-dismiss" onClick={() => {
+                  <button className="w-full py-[13px] bg-black/30 text-white/70 border border-black/20 rounded-xl text-sm font-medium font-sora cursor-pointer transition-colors hover:bg-black/50 hover:text-white" onClick={() => {
                     setDismissed(true);
                     setShowAlertPage(false);
                   }}>
@@ -358,246 +243,124 @@ export default function Home() {
               </>
             ) : (
               <>
-                <div className="guide-msg">{disasterMessage}</div>
-                <div className="steps-title">🛟 {t.safetySteps}</div>
-                <div className="steps-list">
+                <div className="w-full bg-black/20 border border-white/15 rounded-2xl py-[18px] px-5 text-[15px] font-medium text-white mb-6 leading-relaxed backdrop-blur-md">
+                    {disasterMessage}
+                </div>
+                <div className="text-xl font-bold text-white mb-3.5 self-start">🛟 {t.safetySteps}</div>
+                <div className="flex flex-col gap-2.5 w-full mb-5">
                   {steps.slice(0, 3).map((step, i) => (
-                    <div key={i} className="step-item" style={{ animationDelay: `${i * 0.1}s` }}>
-                      <div className="step-num">{i + 1}</div>
+                    <div key={i} className="flex items-center gap-3 bg-black/20 border border-white/10 rounded-xl py-3.5 px-4 text-white text-sm animate-fade-up" style={{ animationDelay: `${i * 0.1}s` }}>
+                      <div className="min-w-[28px] h-[28px] bg-white/20 rounded-full flex items-center justify-center text-xs font-bold shrink-0">
+                        {i + 1}
+                      </div>
                       <span>{step}</span>
                     </div>
                   ))}
                 </div>
-                <button className="btn-back-guide" onClick={() => setShowGuidePage(false)}>← Back</button>
+                <button className="py-3 px-7 bg-white/15 text-white border border-white/30 rounded-xl text-sm font-semibold font-sora cursor-pointer transition-colors hover:bg-white/25 w-full" onClick={() => setShowGuidePage(false)}>← Back</button>
               </>
             )}
           </div>
-        </div>
-      </>
+      </div>
     );
   }
 
   // ─── NORMAL PAGE ─────────────────────────────────────────────────
   return (
-    <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+    <div className="min-h-screen bg-bg-base font-sora text-white pb-16 relative overflow-x-hidden bg-grid-pattern">
+      <div className="orb bg-red-600/30 w-[500px] h-[500px] -top-[180px] -right-[120px]" />
+      <div className="orb bg-blue-900/35 w-[450px] h-[450px] -bottom-[150px] -left-[100px]" />
 
-        .user-root {
-          min-height: 100vh; background: #050810;
-          font-family: 'Sora', sans-serif; color: #fff;
-          position: relative; overflow-x: hidden; padding-bottom: 60px;
-        }
-        .user-root::before {
-          content: ''; position: fixed; inset: 0;
-          background-image:
-            linear-gradient(rgba(220,38,38,0.06) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(220,38,38,0.06) 1px, transparent 1px);
-          background-size: 48px 48px; pointer-events: none;
-        }
-        .orb1 {
-          position: fixed; top: -180px; right: -120px;
-          width: 500px; height: 500px; border-radius: 50%;
-          background: radial-gradient(circle, rgba(220,38,38,0.3), transparent 70%);
-          filter: blur(80px); pointer-events: none;
-        }
-        .orb2 {
-          position: fixed; bottom: -150px; left: -100px;
-          width: 450px; height: 450px; border-radius: 50%;
-          background: radial-gradient(circle, rgba(30,58,138,0.35), transparent 70%);
-          filter: blur(80px); pointer-events: none;
-        }
+      <div className="sticky top-0 z-50 flex items-center justify-between py-3.5 px-5 bg-bg-base/70 backdrop-blur-md border-b border-white/5">
+        <div className="text-lg font-extrabold tracking-wide">SARA<span className="text-red-500">THI</span></div>
+        <div className="flex items-center gap-2.5">
+          <LanguageSelector />
+          <BackButton disabled={!!selectedDisaster} />
+        </div>
+      </div>
 
-        .top-bar {
-          position: sticky; top: 0; z-index: 50;
-          display: flex; align-items: center; justify-content: space-between;
-          padding: 14px 20px; background: rgba(5,8,16,0.7);
-          backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.06);
-        }
-        .brand { font-size: 18px; font-weight: 800; letter-spacing: 1px; }
-        .brand span { color: #ef4444; }
-        .top-right { display: flex; align-items: center; gap: 10px; }
-
-        .content { max-width: 500px; margin: 0 auto; padding: 24px 16px; }
-
-        .hero { text-align: center; margin-bottom: 32px; animation: fadeUp 0.6s ease both; }
-        @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:none} }
-        .hero-shield {
-          width: 72px; height: 72px; margin: 0 auto 16px;
-          background: linear-gradient(135deg, rgba(220,38,38,0.2), rgba(220,38,38,0.05));
-          border: 1px solid rgba(220,38,38,0.25); border-radius: 20px;
-          display: flex; align-items: center; justify-content: center; font-size: 32px;
-          box-shadow: 0 0 32px rgba(220,38,38,0.15);
-        }
-        .hero-title { font-size: 28px; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 4px; }
-        .hero-title span { color: #ef4444; }
-        .hero-sub { font-size: 13px; color: rgba(255,255,255,0.4); }
-
-        .status-card {
-          border-radius: 16px; padding: 16px 20px;
-          display: flex; align-items: center; justify-content: space-between;
-          margin-bottom: 20px; animation: fadeUp 0.6s 0.1s ease both;
-          cursor: pointer; transition: transform 0.15s;
-        }
-        .status-card:hover { transform: scale(1.01); }
-        .status-safe { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); }
-        .status-alert { background: rgba(220,38,38,0.12); border: 1px solid rgba(220,38,38,0.35); box-shadow: 0 0 20px rgba(220,38,38,0.12); }
-        .status-left { display: flex; align-items: center; gap: 12px; }
-        .status-dot { width: 10px; height: 10px; border-radius: 50%; }
-        .status-dot.safe { background: #22c55e; box-shadow: 0 0 8px #22c55e; }
-        .status-dot.alert-dot { background: #ef4444; box-shadow: 0 0 8px #ef4444; animation: alertPulse 0.8s infinite; }
-        @keyframes alertPulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-        .status-text { font-size: 14px; font-weight: 500; }
-        .status-text.safe { color: #4ade80; }
-        .status-text.alert-text { color: #f87171; }
-        .status-badge { font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 4px 10px; border-radius: 20px; font-weight: 500; }
-        .status-badge.safe-badge { background: rgba(34,197,94,0.15); color: #4ade80; }
-        .status-badge.alert-badge-pill { background: rgba(220,38,38,0.2); color: #f87171; }
-
-        .section-head { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; animation: fadeUp 0.6s 0.2s ease both; }
-        .section-head-line { flex: 1; height: 1px; background: rgba(255,255,255,0.07); }
-        .section-head-text { font-size: 11px; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 1.5px; white-space: nowrap; }
-
-        .disaster-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; animation: fadeUp 0.6s 0.25s ease both; }
-        .disaster-card {
-          border-radius: 14px; padding: 16px 10px;
-          display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
-          cursor: pointer; border: 1px solid; transition: transform 0.2s, box-shadow 0.2s; text-align: center;
-        }
-        .disaster-card:hover { transform: translateY(-3px); }
-        .disaster-card-emoji { font-size: 28px; }
-        .disaster-card-label { font-size: 11px; font-weight: 600; letter-spacing: 0.5px; }
-
-        .tips-panel { animation: fadeUp 0.4s ease both; }
-        .tips-back-btn {
-          display: flex; align-items: center; gap: 8px;
-          background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
-          border-radius: 10px; padding: 10px 16px; color: rgba(255,255,255,0.7);
-          font-size: 13px; font-weight: 500; font-family: 'Sora', sans-serif;
-          cursor: pointer; margin-bottom: 20px; transition: background 0.2s;
-        }
-        .tips-back-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
-        .tips-header { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
-        .tips-icon-box { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 26px; border: 1px solid; }
-        .tips-title { font-size: 22px; font-weight: 800; }
-        .tips-subtitle { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 2px; }
-        .tips-list { display: flex; flex-direction: column; gap: 10px; }
-        .tip-item {
-          display: flex; align-items: flex-start; gap: 12px;
-          background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
-          border-radius: 12px; padding: 14px 16px; animation: stepIn 0.4s ease both;
-        }
-        @keyframes stepIn { from{opacity:0;transform:translateX(-12px)} to{opacity:1;transform:none} }
-        .tip-num {
-          min-width: 26px; height: 26px; border-radius: 8px;
-          display: flex; align-items: center; justify-content: center;
-          font-size: 11px; font-weight: 700; font-family: 'JetBrains Mono', monospace; flex-shrink: 0;
-        }
-        .tip-text { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.5; }
-
-        .sos-strip {
-          position: fixed; bottom: 0; left: 0; right: 0;
-          background: rgba(220,38,38,0.9); padding: 10px; text-align: center;
-          font-size: 13px; font-weight: 600; color: #fff;
-          letter-spacing: 0.5px; z-index: 50; backdrop-filter: blur(8px);
-        }
-      `}</style>
-
-      <div className="user-root">
-        <div className="orb1" />
-        <div className="orb2" />
-
-        <div className="top-bar">
-          <div className="brand">SARA<span>THI</span></div>
-          <div className="top-right">
-            <LanguageSelector />
-            <BackButton disabled={!!selectedDisaster} />
+      <div className="w-full max-w-[500px] mx-auto px-4 py-6 relative z-10">
+        <div className="text-center mb-8 animate-fade-up">
+          <div className="w-[72px] h-[72px] mx-auto mb-4 bg-gradient-to-br from-red-600/20 to-red-600/5 border border-red-600/25 rounded-2xl flex items-center justify-center text-[32px] shadow-[0_0_32px_rgba(220,38,38,0.15)] drop-shadow">
+              🛡️
           </div>
+          <h1 className="text-[28px] font-extrabold tracking-wide mb-1 leading-tight">{t.title.split(" ")[0]} <span className="text-red-500">{t.title.split(" ")[1] || ""}</span></h1>
+          <p className="text-[13px] text-white/40">Because Every Life Matters</p>
         </div>
 
-        <div className="content">
-          <div className="hero">
-            <div className="hero-shield">🛡️</div>
-            <h1 className="hero-title">{t.title.split(" ")[0]} <span>{t.title.split(" ")[1] || ""}</span></h1>
-            <p className="hero-sub">Because Every Life Matters</p>
-          </div>
-
-          {/* Status card — clicking shows alert overlay again even if dismissed */}
-          <div
-            className={`status-card ${alert ? "status-alert" : "status-safe"}`}
+        {/* Status card */}
+        <div
+            className={`rounded-2xl p-4 flex items-center justify-between mb-5 cursor-pointer transition-transform duration-150 hover:scale-[1.01] animate-[fadeUp_0.6s_0.1s_ease_both] ${alert ? "bg-red-600/10 border border-red-500/35 shadow-[0_0_20px_rgba(220,38,38,0.12)]" : "bg-green-500/10 border border-green-500/20"}`}
             onClick={() => alert && setShowAlertPage(true) && setDismissed(false)}
-          >
-            <div className="status-left">
-              <div className={`status-dot ${alert ? "alert-dot" : "safe"}`} />
-              <span className={`status-text ${alert ? "alert-text" : "safe"}`}>
+        >
+            <div className="flex items-center gap-3">
+              <div className={`w-2.5 h-2.5 rounded-full ${alert ? "bg-red-500 shadow-[0_0_8px_#ef4444] animate-[alertPulse_0.8s_infinite]" : "bg-green-500 shadow-[0_0_8px_#22c55e]"}`} />
+              <span className={`text-sm font-medium ${alert ? "text-red-400" : "text-green-400"}`}>
                 {alert ? `🚨 ${t.viewAlert}` : `✅ ${t.waiting}`}
               </span>
             </div>
-            <span className={`status-badge ${alert ? "alert-badge-pill" : "safe-badge"}`}>
+            <span className={`font-jetbrains text-[10px] py-1 px-2.5 rounded-full font-medium ${alert ? "bg-red-600/20 text-red-400" : "bg-green-500/15 text-green-400"}`}>
               {alert ? "LIVE" : "CLEAR"}
             </span>
-          </div>
+        </div>
 
-          {!selectedDisaster ? (
-            <>
-              <div className="section-head">
-                <div className="section-head-text">{t.browseTitle}</div>
-                <div className="section-head-line" />
-              </div>
-              <p style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", marginBottom: 16 }}>
-                {t.browseSubtitle}
-              </p>
-              <div className="disaster-grid">
-                {disasters.map((d, i) => {
-                  const meta = disasterMeta[d];
-                  return (
-                    <div
-                      key={i}
-                      className="disaster-card"
-                      style={{ background: meta.bg, borderColor: meta.border, color: meta.color, animationDelay: `${i * 0.05}s` }}
-                      onClick={() => setSelectedDisaster(d)}
-                    >
-                      <div className="disaster-card-emoji">{meta.emoji}</div>
-                      <div className="disaster-card-label">{d}</div>
-                    </div>
-                  );
-                })}
-              </div>
-            </>
-          ) : (
-            <div className="tips-panel">
-              <button className="tips-back-btn" onClick={() => setSelectedDisaster(null)}>
-                {t.backToList}
-              </button>
-              <div className="tips-header">
-                <div className="tips-icon-box" style={{ background: selectedMeta.bg, borderColor: selectedMeta.border, color: selectedMeta.color }}>
-                  {selectedMeta.emoji}
-                </div>
-                <div>
-                  <div className="tips-title">{selectedDisaster}</div>
-                  <div className="tips-subtitle">{t.safetyTips}</div>
-                </div>
-              </div>
-              <div className="tips-list">
-                {selectedTips.map((tip, i) => (
-                  <div key={i} className="tip-item" style={{ animationDelay: `${i * 0.07}s` }}>
-                    <div className="tip-num" style={{ background: selectedMeta.bg, color: selectedMeta.color, border: `1px solid ${selectedMeta.border}` }}>
-                      {i + 1}
-                    </div>
-                    <span className="tip-text">{tip}</span>
+        {!selectedDisaster ? (
+          <>
+            <div className="flex items-center gap-2.5 mb-4 animate-[fadeUp_0.6s_0.2s_ease_both]">
+              <div className="text-[11px] text-white/35 uppercase tracking-[1.5px] whitespace-nowrap">{t.browseTitle}</div>
+              <div className="flex-1 h-px bg-white/5" />
+            </div>
+            <p className="text-xs text-white/35 mb-4 animate-[fadeUp_0.6s_0.25s_ease_both]">
+              {t.browseSubtitle}
+            </p>
+            <div className="grid grid-cols-3 gap-2.5 animate-[fadeUp_0.6s_0.25s_ease_both]">
+              {disasters.map((d, i) => {
+                const meta = disasterMeta[d];
+                return (
+                  <div
+                    key={i}
+                    className="rounded-[14px] p-2.5 flex flex-col items-center justify-center gap-2 cursor-pointer border transition-all duration-200 hover:-translate-y-1 text-center"
+                    style={{ background: meta.bg, borderColor: meta.border, color: meta.color, animationDelay: `${i * 0.05}s` }}
+                    onClick={() => setSelectedDisaster(d)}
+                  >
+                    <div className="text-[28px]">{meta.emoji}</div>
+                    <div className="text-[11px] font-semibold tracking-[0.5px]">{d}</div>
                   </div>
-                ))}
+                );
+              })}
+            </div>
+          </>
+        ) : (
+          <div className="animate-fade-up">
+            <button className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl py-2.5 px-4 text-white/70 text-[13px] font-medium font-sora cursor-pointer mb-5 transition-colors hover:bg-white/10 hover:text-white" onClick={() => setSelectedDisaster(null)}>
+              {t.backToList}
+            </button>
+            <div className="flex items-center gap-3.5 mb-5">
+              <div className="w-[52px] h-[52px] rounded-[14px] flex items-center justify-center text-[26px] border" style={{ background: selectedMeta.bg, borderColor: selectedMeta.border, color: selectedMeta.color }}>
+                {selectedMeta.emoji}
+              </div>
+              <div>
+                <div className="text-[22px] font-extrabold">{selectedDisaster}</div>
+                <div className="text-xs text-white/40 mt-0.5">{t.safetyTips}</div>
               </div>
             </div>
-          )}
-        </div>
-
-        <div className="sos-strip">
-          🚨 Emergency Helpline: <strong>112</strong> &nbsp;|&nbsp; Available 24×7
-        </div>
+            <div className="flex flex-col gap-2.5">
+              {selectedTips.map((tip, i) => (
+                <div key={i} className="flex items-start gap-3 bg-white/[0.03] border border-white/5 rounded-xl p-3.5 animate-fade-up" style={{ animationDelay: `${i * 0.07}s` }}>
+                  <div className="min-w-[26px] h-[26px] rounded-lg flex items-center justify-center text-[11px] font-bold font-jetbrains shrink-0" style={{ background: selectedMeta.bg, color: selectedMeta.color, border: `1px solid ${selectedMeta.border}` }}>
+                    {i + 1}
+                  </div>
+                  <span className="text-[13px] text-white/80 leading-relaxed font-light">{tip}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
-    </>
+
+      <div className="fixed bottom-0 left-0 right-0 bg-red-600/90 py-2.5 px-2.5 text-center text-[13px] font-semibold text-white tracking-wide z-50 backdrop-blur-md">
+        <span className="animate-[blink_1.4s_infinite]">🚨</span> Emergency Helpline: <strong>112</strong> &nbsp;|&nbsp; Available 24×7
+      </div>
+    </div>
   );
 }
-

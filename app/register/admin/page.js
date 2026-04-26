@@ -1,4 +1,3 @@
-
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -30,7 +29,7 @@ export default function AdminRegister() {
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => { }, []);
+  useEffect(() => {}, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -108,227 +107,166 @@ export default function AdminRegister() {
   const step1Valid = ["name", "dob", "gender", "state"].every(f => form[f] !== "");
 
   return (
-    <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=DM+Serif+Display&display=swap');
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        .admin-root { min-height: 100vh; background: #0a0f1e; font-family: 'Sora', sans-serif; color: #f0f4ff; display: flex; flex-direction: column; align-items: center; padding: 24px; position: relative; overflow-x: hidden; }
-        .admin-root::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(59,130,246,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(59,130,246,0.04) 1px, transparent 1px); background-size: 40px 40px; pointer-events: none; }
-        .orb { position: fixed; border-radius: 50%; filter: blur(80px); pointer-events: none; opacity: 0.15; z-index: 0; }
-        .orb-1 { width: 350px; height: 350px; background: #1e40af; top: -100px; left: -100px; }
-        .orb-2 { width: 250px; height: 250px; background: #dc2626; bottom: -80px; right: -80px; }
-        .top-bar { width: 100%; max-width: 560px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; position: relative; z-index: 10; }
-        .form-wrapper { width: 100%; max-width: 560px; position: relative; z-index: 10; }
-        .form-header { margin-bottom: 32px; }
-        .form-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(220,38,38,0.1); border: 1px solid rgba(220,38,38,0.25); padding: 5px 14px; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #f87171; margin-bottom: 14px; }
-        .form-title { font-family: 'DM Serif Display', serif; font-size: 32px; font-weight: 400; color: #f0f4ff; margin-bottom: 6px; }
-        .form-subtitle { font-size: 13px; color: #64748b; font-weight: 300; }
-        .steps { display: flex; align-items: center; gap: 0; margin-bottom: 32px; }
-        .step-item { display: flex; align-items: center; gap: 8px; flex: 1; }
-        .step-circle { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; border: 1.5px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); color: #475569; flex-shrink: 0; transition: all 0.3s ease; }
-        .step-circle.active { background: rgba(220,38,38,0.15); border-color: #dc2626; color: #f87171; }
-        .step-circle.done { background: rgba(5,150,105,0.15); border-color: #059669; color: #34d399; }
-        .step-label { font-size: 11px; color: #475569; font-weight: 500; transition: color 0.3s; }
-        .step-label.active { color: #f87171; }
-        .step-label.done { color: #34d399; }
-        .step-line { flex: 1; height: 1px; background: rgba(255,255,255,0.07); margin: 0 8px; }
-        .step-line.done { background: #059669; }
-        .section-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; padding: 24px; margin-bottom: 16px; }
-        .section-title { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #475569; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-        .section-title::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.06); }
-        .field-group { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-        .field-group.single { grid-template-columns: 1fr; }
-        @media (max-width: 480px) { .field-group { grid-template-columns: 1fr; } }
-        .field { display: flex; flex-direction: column; gap: 6px; }
-        .field-label { font-size: 11px; font-weight: 600; color: #64748b; letter-spacing: 0.06em; text-transform: uppercase; }
-        .field-input { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 11px 14px; font-family: 'Sora', sans-serif; font-size: 13px; color: #f0f4ff; width: 100%; transition: all 0.2s ease; outline: none; }
-        .field-input::placeholder { color: #334155; }
-        .field-input:focus { border-color: rgba(220,38,38,0.4); background: rgba(220,38,38,0.04); box-shadow: 0 0 0 3px rgba(220,38,38,0.08); }
-        .field-input.error { border-color: rgba(239,68,68,0.5); }
-        .field-input option { background: #0f172a; color: #f0f4ff; }
-        .field-error { font-size: 11px; color: #f87171; display: flex; align-items: center; gap: 4px; }
-        .otp-row { display: flex; gap: 8px; align-items: flex-start; }
-        .otp-row .field { flex: 1; }
-        .otp-btn { padding: 11px 16px; border-radius: 8px; font-family: 'Sora', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s ease; white-space: nowrap; margin-top: 23px; }
-        .otp-send { background: rgba(37,99,235,0.15); border: 1px solid rgba(37,99,235,0.3); color: #60a5fa; }
-        .otp-send:hover { background: rgba(37,99,235,0.25); }
-        .otp-verify { background: rgba(5,150,105,0.15); border: 1px solid rgba(5,150,105,0.3); color: #34d399; }
-        .otp-verify:hover { background: rgba(5,150,105,0.25); }
-        .verified-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(5,150,105,0.1); border: 1px solid rgba(5,150,105,0.25); padding: 6px 14px; border-radius: 999px; font-size: 12px; font-weight: 600; color: #34d399; margin-top: 8px; }
-        .pass-wrapper { position: relative; }
-        .pass-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 16px; color: #475569; transition: color 0.2s; }
-        .pass-toggle:hover { color: #94a3b8; }
-        .pass-strength { display: flex; gap: 4px; margin-top: 6px; }
-        .strength-bar { height: 3px; flex: 1; border-radius: 999px; background: rgba(255,255,255,0.06); transition: background 0.3s ease; }
-        .nav-buttons { display: flex; gap: 12px; margin-top: 8px; }
-        .btn-next { flex: 1; background: #dc2626; color: #fff; border: none; padding: 14px; border-radius: 10px; font-family: 'Sora', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s ease; letter-spacing: 0.02em; }
-        .btn-next:hover { background: #b91c1c; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(220,38,38,0.35); }
-        .btn-next:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
-        .btn-back-step { background: rgba(255,255,255,0.05); color: #94a3b8; border: 1px solid rgba(255,255,255,0.08); padding: 14px 20px; border-radius: 10px; font-family: 'Sora', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
-        .btn-back-step:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.15); }
-        .fade-in { opacity: 0; transform: translateY(16px); animation: fadeUp 0.4s ease forwards; }
-        @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
-        .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 8px; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-      `}</style>
+    <div className="min-h-screen bg-bg-base font-sora text-white flex flex-col items-center py-6 px-4 relative overflow-x-hidden bg-grid-pattern-blue">
+      <div className="orb bg-blue-900 w-[350px] h-[350px] -top-[100px] -left-[100px]" />
+      <div className="orb bg-red-600 w-[250px] h-[250px] -bottom-[80px] -right-[80px]" />
 
-      <div className="admin-root">
-        <div className="orb orb-1" />
-        <div className="orb orb-2" />
-
-        <div className="top-bar">
-          <BackButton />
-          <LanguageSelector />
-        </div>
-
-        <div className="form-wrapper">
-          <div className="form-header fade-in">
-            <div className="form-badge">🛡️ Government Official</div>
-            <h2 className="form-title">Admin Registration</h2>
-            <p className="form-subtitle">Verified officials only — Gov ID & Aadhaar required</p>
-          </div>
-
-          <div className="steps fade-in">
-            <div className="step-item">
-              <div className={`step-circle ${step === 1 ? "active" : step > 1 ? "done" : ""}`}>{step > 1 ? "✓" : "1"}</div>
-              <span className={`step-label ${step === 1 ? "active" : step > 1 ? "done" : ""}`}>Personal Info</span>
-            </div>
-            <div className={`step-line ${step > 1 ? "done" : ""}`} />
-            <div className="step-item">
-              <div className={`step-circle ${step === 2 ? "active" : step > 2 ? "done" : ""}`}>{step > 2 ? "✓" : "2"}</div>
-              <span className={`step-label ${step === 2 ? "active" : step > 2 ? "done" : ""}`}>Verification</span>
-            </div>
-            <div className={`step-line ${step > 2 ? "done" : ""}`} />
-            <div className="step-item">
-              <div className={`step-circle ${step === 3 ? "active" : ""}`}>3</div>
-              <span className={`step-label ${step === 3 ? "active" : ""}`}>Credentials</span>
-            </div>
-          </div>
-
-          {/* STEP 1 */}
-          {step === 1 && (
-            <div className="fade-in">
-              <div className="section-card">
-                <div className="section-title">Personal Details</div>
-                <div className="field-group">
-                  <div className="field">
-                    <label className="field-label">Full Name *</label>
-                    <input name="name" placeholder="Enter full name" value={form.name} onChange={handleChange} onBlur={handleBlur} autoComplete="off" className={`field-input ${errors.name ? "error" : ""}`} />
-                    {errors.name && <span className="field-error">⚠ {errors.name}</span>}
-                  </div>
-                  <div className="field">
-                    <label className="field-label">Date of Birth *</label>
-                    <input type="date" name="dob" value={form.dob} onChange={handleChange} onBlur={handleBlur} autoComplete="off" className={`field-input ${errors.dob ? "error" : ""}`} />
-                    {errors.dob && <span className="field-error">⚠ {errors.dob}</span>}
-                  </div>
-                </div>
-                <div className="field-group">
-                  <div className="field">
-                    <label className="field-label">Gender *</label>
-                    <select name="gender" value={form.gender} onChange={handleChange} autoComplete="off" className="field-input">
-                      <option value="male">Male</option>
-                      <option value="female">Female</option>
-                      <option value="others">Others</option>
-                    </select>
-                  </div>
-                  <div className="field">
-                    <label className="field-label">State *</label>
-                    <select name="state" value={form.state} onChange={handleChange} onBlur={handleBlur} autoComplete="off" className={`field-input ${errors.state ? "error" : ""}`}>
-                      <option value="" disabled>Select State</option>
-                      {validStates.map((s) => <option key={s} value={s}>{s}</option>)}
-                    </select>
-                    {errors.state && <span className="field-error">⚠ {errors.state}</span>}
-                  </div>
-                </div>
-              </div>
-              <div className="nav-buttons">
-                <button className="btn-next" disabled={!step1Valid} onClick={() => setStep(2)}>Continue to Verification →</button>
-              </div>
-            </div>
-          )}
-
-          {/* STEP 2 */}
-          {step === 2 && (
-            <div className="fade-in">
-              <div className="section-card">
-                <div className="section-title">Phone & OTP Verification</div>
-                <div className="otp-row" style={{ marginBottom: "12px" }}>
-                  <div className="field">
-                    <label className="field-label">Phone Number *</label>
-                    <input name="phone" placeholder="10-digit mobile number" value={form.phone} onChange={handleChange} onBlur={handleBlur} autoComplete="off" className={`field-input ${errors.phone ? "error" : ""}`} />
-                    {errors.phone && <span className="field-error">⚠ {errors.phone}</span>}
-                  </div>
-                  <button className="otp-btn otp-send" onClick={sendOtp}>Send OTP</button>
-                </div>
-                <div className="otp-row">
-                  <div className="field">
-                    <label className="field-label">Enter OTP *</label>
-                    <input placeholder="6-digit OTP" value={otp} onChange={(e) => setOtp(e.target.value)} autoComplete="one-time-code" className="field-input" />
-                  </div>
-                  <button className="otp-btn otp-verify" onClick={verifyOtp}>Verify</button>
-                </div>
-                {otpVerified && <div className="verified-badge">✓ Phone Verified Successfully</div>}
-              </div>
-              <div className="section-card">
-                <div className="section-title">Government Identity</div>
-                <div className="field-group">
-                  <div className="field">
-                    <label className="field-label">Aadhaar Number *</label>
-                    <input name="aadhaar" placeholder="12-digit Aadhaar" value={form.aadhaar} onChange={handleChange} onBlur={handleBlur} autoComplete="off" className={`field-input ${errors.aadhaar ? "error" : ""}`} />
-                    {errors.aadhaar && <span className="field-error">⚠ {errors.aadhaar}</span>}
-                  </div>
-                  <div className="field">
-                    <label className="field-label">Government ID *</label>
-                    <input name="govId" placeholder="e.g. INDADMIN123" value={form.govId} onChange={handleChange} onBlur={handleBlur} autoComplete="on" className={`field-input ${errors.govId ? "error" : ""}`} />
-                    {errors.govId && <span className="field-error">⚠ {errors.govId}</span>}
-                  </div>
-                </div>
-              </div>
-              <div className="nav-buttons">
-                <button className="btn-back-step" onClick={() => setStep(1)}>← Back</button>
-                <button className="btn-next" disabled={!otpVerified || !form.aadhaar || !form.govId} onClick={() => setStep(3)}>Continue to Credentials →</button>
-              </div>
-            </div>
-          )}
-
-          {/* STEP 3 */}
-          {step === 3 && (
-            <div className="fade-in">
-              <div className="section-card">
-                <div className="section-title">Account Credentials</div>
-                <div className="field-group single" style={{ marginBottom: "12px" }}>
-                  <div className="field">
-                    <label className="field-label">Username *</label>
-                    <input name="username" placeholder="Choose a username" value={form.username} onChange={handleChange} onBlur={handleBlur} autoComplete="off" className={`field-input ${errors.username ? "error" : ""}`} />
-                    {errors.username && <span className="field-error">⚠ {errors.username}</span>}
-                  </div>
-                </div>
-                <div className="field-group single">
-                  <div className="field">
-                    <label className="field-label">Password *</label>
-                    <div className="pass-wrapper">
-                      <input type={showPassword ? "text" : "password"} name="password" placeholder="Min 8 chars, A-Z, a-z, 0-9, symbol" value={form.password} onChange={handleChange} onBlur={handleBlur} autoComplete="new-password" className={`field-input ${errors.password ? "error" : ""}`} style={{ paddingRight: "40px" }} />
-                      <span className="pass-toggle" onClick={() => setShowPassword(!showPassword)}>{showPassword ? "🙈" : "👁️"}</span>
-                    </div>
-                    <div className="pass-strength">
-                      {[1,2,3,4].map(i => (
-                        <div key={i} className="strength-bar" style={{ background: form.password.length >= i * 2 ? (validatePassword(form.password) ? "#059669" : "#d97706") : "rgba(255,255,255,0.06)" }} />
-                      ))}
-                    </div>
-                    {errors.password && <span className="field-error">⚠ {errors.password}</span>}
-                  </div>
-                </div>
-              </div>
-              <div className="nav-buttons">
-                <button className="btn-back-step" onClick={() => setStep(2)}>← Back</button>
-                <button className="btn-next" disabled={isSubmitting} onClick={handleRegister}>
-                  {isSubmitting ? <><span className="spinner" />Saving...</> : "🛡️ Complete Registration"}
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
+      <div className="w-full max-w-[560px] flex justify-between items-center mb-8 relative z-10">
+        <BackButton />
+        <LanguageSelector />
       </div>
-    </>
+
+      <div className="w-full max-w-[560px] relative z-10">
+        <div className="mb-8 animate-fade-up">
+          <div className="inline-flex items-center gap-1.5 bg-red-600/10 border border-red-600/25 px-3.5 py-1.5 rounded-full text-[11px] font-semibold tracking-widest uppercase text-red-400 mb-3.5">
+             🛡️ Government Official
+          </div>
+          <h2 className="font-dm text-[32px] font-normal leading-tight mb-1.5">Admin Registration</h2>
+          <p className="text-[13px] text-slate-400 font-light">Verified officials only — Gov ID & Aadhaar required</p>
+        </div>
+
+        <div className="flex items-center mb-8 animate-fade-up">
+          <div className="flex items-center gap-2 flex-1">
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-colors duration-300 ${step === 1 ? "bg-red-600/15 border-red-600 text-red-400" : step > 1 ? "bg-emerald-600/15 border-emerald-600 text-emerald-400" : "bg-white/5 border-white/10 text-slate-500"}`}>{step > 1 ? "✓" : "1"}</div>
+            <span className={`text-[11px] font-medium transition-colors ${step === 1 ? "text-red-400" : step > 1 ? "text-emerald-400" : "text-slate-500"}`}>Personal Info</span>
+          </div>
+          <div className={`flex-1 h-px mx-2 ${step > 1 ? "bg-emerald-600" : "bg-white/10"}`} />
+          
+          <div className="flex items-center gap-2 flex-1">
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-colors duration-300 ${step === 2 ? "bg-red-600/15 border-red-600 text-red-400" : step > 2 ? "bg-emerald-600/15 border-emerald-600 text-emerald-400" : "bg-white/5 border-white/10 text-slate-500"}`}>{step > 2 ? "✓" : "2"}</div>
+            <span className={`text-[11px] font-medium transition-colors ${step === 2 ? "text-red-400" : step > 2 ? "text-emerald-400" : "text-slate-500"}`}>Verification</span>
+          </div>
+          <div className={`flex-1 h-px mx-2 ${step > 2 ? "bg-emerald-600" : "bg-white/10"}`} />
+          
+          <div className="flex items-center gap-2 flex-1">
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-colors duration-300 ${step === 3 ? "bg-red-600/15 border-red-600 text-red-400" : "bg-white/5 border-white/10 text-slate-500"}`}>3</div>
+            <span className={`text-[11px] font-medium transition-colors ${step === 3 ? "text-red-400" : "text-slate-500"}`}>Credentials</span>
+          </div>
+        </div>
+
+        {/* STEP 1 */}
+        {step === 1 && (
+          <div className="animate-fade-up">
+            <div className="glass-card rounded-2xl p-6 mb-4">
+              <div className="flex items-center gap-2 text-[11px] font-bold tracking-widest uppercase text-slate-400 mb-4 after:content-[''] after:flex-1 after:h-px after:bg-white/10">Personal Details</div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[11px] font-semibold text-slate-400 tracking-widest uppercase">Full Name *</label>
+                  <input name="name" placeholder="Enter full name" value={form.name} onChange={handleChange} onBlur={handleBlur} autoComplete="off" className={`bg-white/5 border rounded-xl py-3 px-3.5 text-[13px] font-sora outline-none transition-all focus:bg-white/10 ${errors.name ? "border-red-500/50" : "border-white/10 focus:border-red-500/40 focus:shadow-[0_0_0_3px_rgba(220,38,38,0.08)]"}`} />
+                  {errors.name && <span className="text-[11px] text-red-400 flex items-center gap-1">⚠ {errors.name}</span>}
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[11px] font-semibold text-slate-400 tracking-widest uppercase">Date of Birth *</label>
+                  <input type="date" name="dob" value={form.dob} onChange={handleChange} onBlur={handleBlur} autoComplete="off" className={`bg-white/5 border rounded-xl py-3 px-3.5 text-[13px] font-sora outline-none transition-all focus:bg-white/10 ${errors.dob ? "border-red-500/50" : "border-white/10 focus:border-red-500/40 focus:shadow-[0_0_0_3px_rgba(220,38,38,0.08)]"}`} />
+                  {errors.dob && <span className="text-[11px] text-red-400 flex items-center gap-1">⚠ {errors.dob}</span>}
+                </div>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[11px] font-semibold text-slate-400 tracking-widest uppercase">Gender *</label>
+                  <select name="gender" value={form.gender} onChange={handleChange} autoComplete="off" className="bg-white/5 border border-white/10 rounded-xl py-3 px-3.5 text-[13px] font-sora outline-none transition-all focus:bg-white/10 focus:border-red-500/40 focus:shadow-[0_0_0_3px_rgba(220,38,38,0.08)] [&>option]:bg-slate-900">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="others">Others</option>
+                  </select>
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[11px] font-semibold text-slate-400 tracking-widest uppercase">State *</label>
+                  <select name="state" value={form.state} onChange={handleChange} onBlur={handleBlur} autoComplete="off" className={`bg-white/5 border rounded-xl py-3 px-3.5 text-[13px] font-sora outline-none transition-all focus:bg-white/10 [&>option]:bg-slate-900 ${errors.state ? "border-red-500/50" : "border-white/10 focus:border-red-500/40 focus:shadow-[0_0_0_3px_rgba(220,38,38,0.08)]"}`}>
+                    <option value="" disabled>Select State</option>
+                    {validStates.map((s) => <option key={s} value={s}>{s}</option>)}
+                  </select>
+                  {errors.state && <span className="text-[11px] text-red-400 flex items-center gap-1">⚠ {errors.state}</span>}
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-3 mt-2">
+              <button className="flex-1 bg-red-600 text-white rounded-xl py-3.5 px-4 font-bold text-sm tracking-wide hover:bg-red-700 hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(220,38,38,0.35)] transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:-translate-y-0 disabled:shadow-none" disabled={!step1Valid} onClick={() => setStep(2)}>Continue to Verification →</button>
+            </div>
+          </div>
+        )}
+
+        {/* STEP 2 */}
+        {step === 2 && (
+          <div className="animate-fade-up">
+            <div className="glass-card rounded-2xl p-6 mb-4">
+              <div className="flex items-center gap-2 text-[11px] font-bold tracking-widest uppercase text-slate-400 mb-4 after:content-[''] after:flex-1 after:h-px after:bg-white/10">Phone & OTP Verification</div>
+              <div className="flex gap-2 items-end mb-3">
+                <div className="flex flex-col gap-1.5 flex-1">
+                  <label className="text-[11px] font-semibold text-slate-400 tracking-widest uppercase">Phone Number *</label>
+                  <input name="phone" placeholder="10-digit mobile number" value={form.phone} onChange={handleChange} onBlur={handleBlur} autoComplete="off" className={`bg-white/5 border rounded-xl py-3 px-3.5 text-[13px] font-sora outline-none transition-all focus:bg-white/10 ${errors.phone ? "border-red-500/50" : "border-white/10 focus:border-red-500/40 focus:shadow-[0_0_0_3px_rgba(220,38,38,0.08)]"}`} />
+                  {errors.phone && <span className="text-[11px] text-red-400 flex items-center gap-1">⚠ {errors.phone}</span>}
+                </div>
+                <button className="bg-blue-600/15 border border-blue-600/30 text-blue-400 whitespace-nowrap rounded-xl py-[11px] px-4 font-semibold text-xs hover:bg-blue-600/25 transition-colors h-[45px]" onClick={sendOtp}>Send OTP</button>
+              </div>
+              <div className="flex gap-2 items-end">
+                <div className="flex flex-col gap-1.5 flex-1">
+                  <label className="text-[11px] font-semibold text-slate-400 tracking-widest uppercase">Enter OTP *</label>
+                  <input placeholder="6-digit OTP" value={otp} onChange={(e) => setOtp(e.target.value)} autoComplete="one-time-code" className="bg-white/5 border border-white/10 rounded-xl py-3 px-3.5 text-[13px] font-sora outline-none transition-all focus:bg-white/10 focus:border-red-500/40 focus:shadow-[0_0_0_3px_rgba(220,38,38,0.08)]" />
+                </div>
+                <button className="bg-emerald-600/15 border border-emerald-600/30 text-emerald-400 whitespace-nowrap rounded-xl py-[11px] px-4 font-semibold text-xs hover:bg-emerald-600/25 transition-colors h-[45px]" onClick={verifyOtp}>Verify</button>
+              </div>
+              {otpVerified && <div className="inline-flex items-center gap-1.5 bg-emerald-600/10 border border-emerald-600/25 rounded-full py-1.5 px-3.5 mt-3 text-xs font-semibold text-emerald-400">✓ Phone Verified Successfully</div>}
+            </div>
+
+            <div className="glass-card rounded-2xl p-6 mb-4">
+              <div className="flex items-center gap-2 text-[11px] font-bold tracking-widest uppercase text-slate-400 mb-4 after:content-[''] after:flex-1 after:h-px after:bg-white/10">Government Identity</div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[11px] font-semibold text-slate-400 tracking-widest uppercase">Aadhaar Number *</label>
+                  <input name="aadhaar" placeholder="12-digit Aadhaar" value={form.aadhaar} onChange={handleChange} onBlur={handleBlur} autoComplete="off" className={`bg-white/5 border rounded-xl py-3 px-3.5 text-[13px] font-sora outline-none transition-all focus:bg-white/10 ${errors.aadhaar ? "border-red-500/50" : "border-white/10 focus:border-red-500/40 focus:shadow-[0_0_0_3px_rgba(220,38,38,0.08)]"}`} />
+                  {errors.aadhaar && <span className="text-[11px] text-red-400 flex items-center gap-1">⚠ {errors.aadhaar}</span>}
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[11px] font-semibold text-slate-400 tracking-widest uppercase">Government ID *</label>
+                  <input name="govId" placeholder="e.g. INDADMIN123" value={form.govId} onChange={handleChange} onBlur={handleBlur} autoComplete="on" className={`bg-white/5 border rounded-xl py-3 px-3.5 text-[13px] font-sora outline-none transition-all focus:bg-white/10 ${errors.govId ? "border-red-500/50" : "border-white/10 focus:border-red-500/40 focus:shadow-[0_0_0_3px_rgba(220,38,38,0.08)]"}`} />
+                  {errors.govId && <span className="text-[11px] text-red-400 flex items-center gap-1">⚠ {errors.govId}</span>}
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex gap-3 mt-2">
+              <button className="bg-white/5 border border-white/10 text-slate-400 rounded-xl py-3.5 px-5 font-semibold text-sm hover:bg-white/10 hover:border-white/20 transition-all" onClick={() => setStep(1)}>← Back</button>
+              <button className="flex-1 bg-red-600 text-white rounded-xl py-3.5 px-4 font-bold text-sm tracking-wide hover:bg-red-700 hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(220,38,38,0.35)] transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:-translate-y-0 disabled:shadow-none" disabled={!otpVerified || !form.aadhaar || !form.govId} onClick={() => setStep(3)}>Continue to Credentials →</button>
+            </div>
+          </div>
+        )}
+
+        {/* STEP 3 */}
+        {step === 3 && (
+          <div className="animate-fade-up">
+            <div className="glass-card rounded-2xl p-6 mb-4">
+              <div className="flex items-center gap-2 text-[11px] font-bold tracking-widest uppercase text-slate-400 mb-4 after:content-[''] after:flex-1 after:h-px after:bg-white/10">Account Credentials</div>
+              <div className="flex flex-col gap-1.5 mb-3">
+                <label className="text-[11px] font-semibold text-slate-400 tracking-widest uppercase">Username *</label>
+                <input name="username" placeholder="Choose a username" value={form.username} onChange={handleChange} onBlur={handleBlur} autoComplete="off" className={`bg-white/5 border rounded-xl py-3 px-3.5 text-[13px] font-sora outline-none transition-all focus:bg-white/10 ${errors.username ? "border-red-500/50" : "border-white/10 focus:border-red-500/40 focus:shadow-[0_0_0_3px_rgba(220,38,38,0.08)]"}`} />
+                {errors.username && <span className="text-[11px] text-red-400 flex items-center gap-1">⚠ {errors.username}</span>}
+              </div>
+              
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[11px] font-semibold text-slate-400 tracking-widest uppercase">Password *</label>
+                <div className="relative">
+                  <input type={showPassword ? "text" : "password"} name="password" placeholder="Min 8 chars, A-Z, a-z, 0-9, symbol" value={form.password} onChange={handleChange} onBlur={handleBlur} autoComplete="new-password" className={`w-full bg-white/5 border rounded-xl py-3 px-3.5 pr-10 text-[13px] font-sora outline-none transition-all focus:bg-white/10 ${errors.password ? "border-red-500/50" : "border-white/10 focus:border-red-500/40 focus:shadow-[0_0_0_3px_rgba(220,38,38,0.08)]"}`} />
+                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 cursor-pointer text-base text-slate-400 hover:text-slate-300 transition-colors" onClick={() => setShowPassword(!showPassword)}>{showPassword ? "🙈" : "👁️"}</span>
+                </div>
+                <div className="flex gap-1 mt-1">
+                  {[1,2,3,4].map(i => (
+                    <div key={i} className={`h-1 flex-1 rounded-full transition-colors duration-300 ${form.password.length >= i * 2 ? (validatePassword(form.password) ? "bg-emerald-600" : "bg-amber-500") : "bg-white/10"}`} />
+                  ))}
+                </div>
+                {errors.password && <span className="text-[11px] text-red-400 flex items-center gap-1 mt-1">⚠ {errors.password}</span>}
+              </div>
+            </div>
+            
+            <div className="flex gap-3 mt-2">
+              <button className="bg-white/5 border border-white/10 text-slate-400 rounded-xl py-3.5 px-5 font-semibold text-sm hover:bg-white/10 hover:border-white/20 transition-all" onClick={() => setStep(2)}>← Back</button>
+              <button className="flex-1 bg-red-600 text-white rounded-xl py-3.5 px-4 font-bold text-sm tracking-wide hover:bg-red-700 hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(220,38,38,0.35)] transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:-translate-y-0 disabled:shadow-none" disabled={isSubmitting} onClick={handleRegister}>
+                {isSubmitting ? <><span className="inline-block w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin align-middle mr-2" />Saving...</> : "🛡️ Complete Registration"}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
