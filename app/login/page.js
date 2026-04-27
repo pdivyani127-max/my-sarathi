@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import BackButton from "../components/BackButton";
 import LanguageSelector from "../components/LanguageSelector";
 import { findUser, findAdmin } from "../lib/firebaseHelpers";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Login() {
   const router = useRouter();
@@ -86,15 +87,15 @@ export default function Login() {
       <div className="orb bg-red-600 w-[500px] h-[500px] -top-[150px] -right-[100px]" />
       <div className="orb bg-blue-900 w-[400px] h-[400px] -bottom-[100px] -left-[100px]" />
 
-      <div className="fixed top-0 left-0 right-0 flex justify-between items-center py-4 px-6 z-50 border-b border-white/5 bg-[#050810]/60 backdrop-blur-md">
+      <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="fixed top-0 left-0 right-0 flex justify-between items-center py-4 px-6 z-50 border-b border-white/5 bg-[#050810]/60 backdrop-blur-[60px]">
         <div className="font-bold text-lg text-white tracking-widest">SARA<span className="text-red-500">THI</span></div>
         <div className="flex items-center gap-3">
           <LanguageSelector />
           <BackButton redirectTo="/" />
         </div>
-      </div>
+      </motion.div>
 
-      <div className="relative z-10 w-full max-w-[440px] glass-card rounded-2xl py-11 px-10 shadow-[0_0_80px_rgba(220,38,38,0.08),0_24px_60px_rgba(0,0,0,0.5)] animate-card-in">
+      <motion.div initial={{ y: 40, opacity: 0, scale: 0.95 }} animate={{ y: 0, opacity: 1, scale: 1 }} transition={{ type: "spring", damping: 24, stiffness: 300, delay: 0.1 }} className="relative z-10 w-full max-w-[440px] glass-panel rounded-[32px] py-11 px-10 shadow-[0_0_80px_rgba(220,38,38,0.1),0_24px_80px_rgba(0,0,0,0.6)]">
         <div className="flex justify-center mb-7">
           <div className="w-16 h-16 bg-gradient-to-br from-red-600/20 to-red-600/5 border border-red-600/30 rounded-2xl flex items-center justify-center text-3xl shadow-[0_0_24px_rgba(220,38,38,0.2)]">🛡️</div>
         </div>
@@ -165,35 +166,38 @@ export default function Login() {
           </label>
         </div>
 
-        {error && (
-          <div className="flex items-center gap-2 bg-red-600/10 border border-red-600/30 rounded-xl py-2.5 px-3.5 text-[13px] text-red-400 mb-4 animate-[shake_0.4s_ease]">
-            <span>⚠️</span>
-            <span>{error}</span>
-          </div>
-        )}
+        <AnimatePresence>
+          {error && (
+            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="flex items-center gap-2 bg-red-600/10 border border-red-600/30 rounded-xl py-2.5 px-3.5 text-[13px] text-red-400 mb-4">
+              <span>⚠️</span>
+              <span>{error}</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-        <button
-          className={`w-full py-3.5 border-none rounded-xl text-[15px] font-semibold font-sora cursor-pointer mt-2 transition-all duration-150 tracking-wide outline-none ${roleType === "user" ? "bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-[0_4px_20px_rgba(59,130,246,0.35)]" : "bg-gradient-to-br from-red-600 to-red-700 text-white shadow-[0_4px_20px_rgba(220,38,38,0.35)]"} hover:-translate-y-px disabled:opacity-60 disabled:cursor-not-allowed active:scale-[0.98]`}
+        <motion.button
+          whileHover={{ scale: 1.02, y: -2 }}
+          whileTap={{ scale: 0.98 }}
+          className={`w-full py-4 border-none rounded-xl text-[15px] font-bold font-sora cursor-pointer mt-2 transition-colors duration-150 tracking-wide outline-none ${roleType === "user" ? "bg-semantic-info text-white shadow-[0_4px_20px_rgba(59,130,246,0.35)]" : "bg-semantic-critical text-white shadow-[0_4px_20px_rgba(239,68,68,0.35)]"} disabled:opacity-60 disabled:cursor-not-allowed`}
           onClick={handleLogin}
           disabled={isLoading}
         >
-          {isLoading ? <><span className="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin align-middle mr-2" />Verifying...</> : t.login || "Login to Sarathi"}
-        </button>
+          {isLoading ? <><span className="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin align-middle mr-2" />Verifying...</> : t.login || "Access Secure Terminal"}
+        </motion.button>
 
         <div className="flex items-center gap-3 my-6">
           <div className="flex-1 h-px bg-white/10" />
-          <div className="text-[11px] text-white/30 uppercase tracking-widest">New here?</div>
+          <div className="text-[10px] uppercase tracking-widest text-text-muted">Unregistered?</div>
           <div className="flex-1 h-px bg-white/10" />
         </div>
 
         <div className="text-center text-[13px] text-white/40">
-          Don&apos;t have an account?{" "}
-          <a href="/register" className="text-red-500 hover:text-red-400 no-underline font-medium transition-colors hover:underline">Register now</a>
+          <a href="/register" className="text-white hover:text-red-400 no-underline font-bold transition-colors hover:underline">Request Access</a>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="fixed bottom-0 left-0 right-0 bg-red-600/90 p-2.5 text-center text-[13px] font-semibold text-white tracking-wide z-50 backdrop-blur-md">
-        <span className="animate-[blink_1.4s_infinite]">🚨</span> Emergency Helpline: <strong>112</strong> &nbsp;|&nbsp; Available 24×7 — <span className="opacity-80">Because Every Life Matters</span>
+      <div className="fixed bottom-0 left-0 right-0 bg-semantic-critical/90 py-3 text-center text-[11px] font-bold uppercase tracking-[0.2em] text-white z-50 backdrop-blur-md">
+        <span className="animate-[blink_1.4s_infinite]">🚨</span> Emergency Helpline: <strong>112</strong>
       </div>
     </div>
   );

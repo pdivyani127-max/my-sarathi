@@ -2,6 +2,7 @@
 import { useRouter } from "next/navigation";
 import BackButton from "../components/BackButton";
 import LanguageSelector from "../components/LanguageSelector";
+import { motion } from "framer-motion";
 
 export default function Register() {
   const router = useRouter();
@@ -11,12 +12,12 @@ export default function Register() {
       <div className="orb bg-blue-800 w-[350px] h-[350px] -top-[100px] -left-[100px]" />
       <div className="orb bg-red-600 w-[250px] h-[250px] -bottom-[80px] -right-[80px]" />
 
-      <div className="fixed top-0 left-0 right-0 flex justify-between items-center py-4 px-6 z-50 border-b border-white/5 bg-[#050810]/60 backdrop-blur-md">
+      <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="fixed top-0 left-0 right-0 flex justify-between items-center py-4 px-6 z-50 border-b border-white/5 bg-[#050810]/60 backdrop-blur-[60px]">
         <BackButton />
         <LanguageSelector />
-      </div>
+      </motion.div>
 
-      <div className="relative z-10 w-full max-w-[480px] text-center mt-12 animate-fade-up">
+      <motion.div initial={{ y: 40, opacity: 0, scale: 0.95 }} animate={{ y: 0, opacity: 1, scale: 1 }} transition={{ type: "spring", damping: 24, stiffness: 300, delay: 0.1 }} className="relative z-10 w-full max-w-[480px] text-center mt-12">
         <p className="text-[11px] font-semibold tracking-widest uppercase text-slate-400 mb-3">Create your account</p>
         <h2 className="font-dm text-[38px] text-white leading-tight mb-2">Join Sarathi</h2>
         <p className="text-sm font-light text-slate-400 mb-10">Select the type of account to register</p>
@@ -68,7 +69,7 @@ export default function Register() {
             Login here
           </span>
         </p>
-      </div>
+      </motion.div>
     </div>
   );
 }
