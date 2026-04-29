@@ -313,7 +313,7 @@ export default function Admin() {
                           <span className="opacity-50">📞</span> {u.phone || "No signal"}
                         </div>
                         <div className="flex items-center gap-3 text-sm font-medium text-text-secondary">
-                          <span className="opacity-50">👥</span> {u.emergencyContact || "No contact linked"}
+                          <span className="opacity-50">👥</span> {u.emergency1 ? `${u.emergency1}${u.emergency2 ? `, ${u.emergency2}` : ""}` : "No contact linked"}
                         </div>
                         {u.location && (
                           <div className="flex items-center gap-3 text-xs font-jetbrains font-bold text-text-muted">
@@ -323,14 +323,30 @@ export default function Admin() {
                       </div>
 
                       {u.location && (
-                        <a
-                          href={`https://www.google.com/maps?q=${u.location.lat},${u.location.lng}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="pl-2 block w-full py-3 rounded-xl bg-white/5 border border-white/5 text-center text-xs font-bold uppercase tracking-widest text-text-primary no-underline transition-colors hover:bg-white/10"
-                        >
-                          Track Position
-                        </a>
+                        <div className="mt-4 border border-white/10 rounded-xl overflow-hidden relative group bg-black/20">
+                          <iframe
+                            width="100%"
+                            height="150"
+                            frameBorder="0"
+                            style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg) contrast(110%) sepia(20%) opacity(0.8)' }}
+                            src={`https://maps.google.com/maps?q=${u.location.lat},${u.location.lng}&z=14&output=embed`}
+                            allowFullScreen
+                            title="Location Map"
+                            className="pointer-events-none transition-all duration-700 group-hover:scale-110 group-hover:opacity-100"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none" />
+                          <div className="absolute bottom-3 left-0 right-0 flex justify-center pointer-events-none">
+                            <a
+                              href={`https://www.google.com/maps?q=${u.location.lat},${u.location.lng}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="pointer-events-auto py-2 px-5 rounded-lg bg-white/10 backdrop-blur-xl border border-white/20 text-[10px] font-bold uppercase tracking-widest text-white shadow-2xl transition-all hover:bg-semantic-info/90 hover:border-semantic-info hover:shadow-[0_0_20px_rgba(6,182,212,0.6)] hover:-translate-y-0.5 flex items-center gap-2"
+                            >
+                              <span className="w-1.5 h-1.5 rounded-full bg-semantic-critical shadow-[0_0_8px_#ef4444] animate-pulse" />
+                              Open Live Map
+                            </a>
+                          </div>
+                        </div>
                       )}
                     </motion.div>
                   ))}
